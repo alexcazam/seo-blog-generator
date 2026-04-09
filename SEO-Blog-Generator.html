@@ -6,153 +6,141 @@
 <title>SEO Blog Generator</title>
 <style>
 :root {
-  --bg: #0f1117; --surface: #1a1d27; --card: #21253a; --border: #2e3350;
-  --accent: #4f6ef7; --accent2: #7c3aed; --green: #22c55e; --yellow: #f59e0b;
-  --red: #ef4444; --text: #e2e8f0; --muted: #8892b0; --radius: 12px;
+  --bg:#0f1117;--surface:#1a1d27;--card:#21253a;--border:#2e3350;
+  --accent:#4f6ef7;--accent2:#7c3aed;--green:#22c55e;--yellow:#f59e0b;
+  --red:#ef4444;--text:#e2e8f0;--muted:#8892b0;--radius:12px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-.header { background: linear-gradient(135deg,#1a1d27,#16192a); border-bottom: 1px solid var(--border); padding: 18px 32px; display: flex; align-items: center; gap: 14px; }
-.header h1 { font-size: 20px; font-weight: 700; }
-.header p { font-size: 12px; color: var(--muted); margin-top: 2px; }
-.main { max-width: 920px; margin: 0 auto; padding: 32px 20px 80px; }
-
-/* Steps */
-.steps-nav { display: flex; margin-bottom: 32px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-.step-pill { flex: 1; padding: 12px 6px; text-align: center; font-size: 10px; font-weight: 700; color: var(--muted); cursor: pointer; border-right: 1px solid var(--border); transition: all .2s; text-transform: uppercase; letter-spacing: .4px; }
-.step-pill:last-child { border-right: none; }
-.step-pill.active { background: linear-gradient(135deg,var(--accent),var(--accent2)); color: #fff; }
-.step-pill.done { color: var(--green); }
-.step-pill .sn { display: block; font-size: 15px; font-weight: 800; margin-bottom: 1px; }
-
-/* Cards */
-.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 18px; }
-.card-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
-.card-desc { font-size: 13px; color: var(--muted); margin-bottom: 22px; line-height: 1.55; }
-
-/* Forms */
-.fg { display: flex; flex-direction: column; gap: 6px; }
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.grid2 .full { grid-column: 1/-1; }
-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
-input, select, textarea { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 14px; transition: border-color .2s; font-family: inherit; width: 100%; }
-input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,110,247,.12); }
-input::placeholder, textarea::placeholder { color: var(--muted); }
-textarea { resize: vertical; }
-.hint { font-size: 11px; color: var(--muted); }
-select option { background: #1a1d27; }
-
-/* Buttons */
-.btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: all .2s; }
-.btn-p { background: linear-gradient(135deg,var(--accent),var(--accent2)); color: #fff; box-shadow: 0 4px 14px rgba(79,110,247,.3); }
-.btn-p:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(79,110,247,.4); }
-.btn-p:disabled { opacity: .45; cursor: not-allowed; transform: none; }
-.btn-s { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-.btn-s:hover { border-color: var(--accent); color: var(--accent); }
-.btn-g { background: var(--green); color: #fff; }
-.btn-sm { padding: 7px 13px; font-size: 12px; }
-.actions { display: flex; gap: 10px; margin-top: 22px; justify-content: flex-end; flex-wrap: wrap; }
-.al { justify-content: flex-start; }
-
-/* Status */
-.sb { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 11px 16px; font-size: 13px; display: flex; align-items: center; gap: 10px; margin-bottom: 14px; line-height: 1.4; }
-.sb.info  { border-color: var(--accent);  background: rgba(79,110,247,.07); }
-.sb.warn  { border-color: var(--yellow);  background: rgba(245,158,11,.07); }
-.sb.err   { border-color: var(--red);     background: rgba(239,68,68,.07); }
-.sb.ok    { border-color: var(--green);   background: rgba(34,197,94,.07); }
-.hidden { display: none !important; }
-
-/* Spinner */
-.spin { width: 15px; height: 15px; border: 2px solid rgba(255,255,255,.2); border-top-color: #fff; border-radius: 50%; animation: sp .7s linear infinite; flex-shrink: 0; }
-@keyframes sp { to { transform: rotate(360deg); } }
-
-/* KD badge */
-.kdb { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 800; }
-.kd-e { background: rgba(34,197,94,.15);  color: var(--green); }
-.kd-m { background: rgba(245,158,11,.15); color: var(--yellow); }
-.kd-h { background: rgba(239,68,68,.15);  color: var(--red); }
-
-/* Table */
-.kwt { width: 100%; border-collapse: collapse; font-size: 13px; }
-.kwt th { background: var(--surface); padding: 9px 13px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); border-bottom: 1px solid var(--border); }
-.kwt td { padding: 10px 13px; border-bottom: 1px solid rgba(46,51,80,.45); vertical-align: middle; }
-.kwt tr:hover td { background: rgba(79,110,247,.05); }
-.kwt tr.sel td { background: rgba(79,110,247,.1); }
-
-/* Pages list */
-.plist { max-height: 200px; overflow-y: auto; }
-.pi { padding: 8px 0; border-bottom: 1px solid rgba(46,51,80,.4); font-size: 12px; }
-.pi:last-child { border-bottom: none; }
-.pt { font-weight: 600; }
-.pu { color: var(--accent); font-size: 11px; word-break: break-all; }
-.pw { color: var(--yellow); font-size: 11px; margin-top: 1px; }
-
-/* Article */
-.art-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px 36px; font-size: 15px; line-height: 1.78; }
-.art-wrap h1 { font-size: 26px; font-weight: 800; margin-bottom: 16px; line-height: 1.3; }
-.art-wrap h2 { font-size: 19px; font-weight: 700; margin: 28px 0 10px; color: #a5b4fc; }
-.art-wrap h3 { font-size: 15px; font-weight: 700; margin: 16px 0 8px; color: var(--muted); }
-.art-wrap p  { margin-bottom: 14px; }
-.art-wrap ul { margin: 8px 0 14px 20px; }
-.art-wrap li { margin-bottom: 5px; }
-.art-wrap a  { color: var(--accent); text-decoration: none; border-bottom: 1px dashed var(--accent); }
-.art-wrap strong { color: #fff; }
-.kpbox { background: rgba(79,110,247,.09); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 14px 0 20px; }
-.kpbox strong { display: block; margin-bottom: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: var(--accent); }
-pre#rawmd { display: none; background: #0d1117; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.6; color: #cdd9e5; white-space: pre-wrap; word-break: break-word; max-height: 600px; overflow-y: auto; }
-
-/* Meta chips */
-.chips { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0; }
-.chip { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 5px 13px; font-size: 12px; color: var(--muted); }
-.chip strong { color: var(--text); }
-
-/* Tone pills */
-.tones { display: flex; gap: 8px; flex-wrap: wrap; }
-.tones input[type=radio] { display: none; }
-.tones label { padding: 6px 14px; border-radius: 6px; background: var(--surface); border: 1px solid var(--border); cursor: pointer; font-size: 13px; color: var(--muted); transition: all .2s; text-transform: none; letter-spacing: 0; }
-.tones input:checked + label { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-/* Manual kw section */
-.manual-kw { background: rgba(245,158,11,.06); border: 1px solid rgba(245,158,11,.3); border-radius: 10px; padding: 16px 20px; margin-top: 14px; }
-
-@media(max-width:600px){ .grid2 { grid-template-columns: 1fr; } .art-wrap { padding: 18px; } }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.header{background:linear-gradient(135deg,#1a1d27,#16192a);border-bottom:1px solid var(--border);padding:18px 32px;display:flex;align-items:center;gap:14px;}
+.header h1{font-size:20px;font-weight:700;}
+.header p{font-size:12px;color:var(--muted);margin-top:2px;}
+.main{max-width:940px;margin:0 auto;padding:32px 20px 80px;}
+.steps-nav{display:flex;margin-bottom:32px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.sp{flex:1;padding:12px 6px;text-align:center;font-size:10px;font-weight:700;color:var(--muted);cursor:pointer;border-right:1px solid var(--border);transition:all .2s;text-transform:uppercase;letter-spacing:.4px;}
+.sp:last-child{border-right:none;}
+.sp.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
+.sp.done{color:var(--green);}
+.sp .sn{display:block;font-size:15px;font-weight:800;margin-bottom:1px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:18px;}
+.card-title{font-size:17px;font-weight:700;margin-bottom:6px;}
+.card-desc{font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.55;}
+.fg{display:flex;flex-direction:column;gap:6px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.full{grid-column:1/-1;}
+label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+input,select,textarea{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;transition:border-color .2s;font-family:inherit;width:100%;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,110,247,.12);}
+input::placeholder,textarea::placeholder{color:var(--muted);}
+textarea{resize:vertical;}
+.hint{font-size:11px;color:var(--muted);}
+select option{background:#1a1d27;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s;}
+.btn-p{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 14px rgba(79,110,247,.3);}
+.btn-p:hover{transform:translateY(-1px);}
+.btn-p:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+.btn-s{background:var(--surface);color:var(--text);border:1px solid var(--border);}
+.btn-s:hover{border-color:var(--accent);color:var(--accent);}
+.btn-g{background:var(--green);color:#fff;}
+.btn-y{background:var(--yellow);color:#000;}
+.btn-sm{padding:7px 13px;font-size:12px;}
+.actions{display:flex;gap:10px;margin-top:22px;justify-content:flex-end;flex-wrap:wrap;}
+.al{justify-content:flex-start;}
+.sb{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 16px;font-size:13px;display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;line-height:1.5;}
+.sb.info{border-color:var(--accent);background:rgba(79,110,247,.07);}
+.sb.warn{border-color:var(--yellow);background:rgba(245,158,11,.07);}
+.sb.err{border-color:var(--red);background:rgba(239,68,68,.07);}
+.sb.ok{border-color:var(--green);background:rgba(34,197,94,.07);}
+.hidden{display:none!important;}
+.spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;flex-shrink:0;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.kdb{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:800;}
+.kd-e{background:rgba(34,197,94,.15);color:var(--green);}
+.kd-m{background:rgba(245,158,11,.15);color:var(--yellow);}
+.kd-h{background:rgba(239,68,68,.15);color:var(--red);}
+.kwt{width:100%;border-collapse:collapse;font-size:13px;}
+.kwt th{background:var(--surface);padding:9px 13px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--border);}
+.kwt td{padding:10px 13px;border-bottom:1px solid rgba(46,51,80,.45);vertical-align:middle;}
+.kwt tr:hover td{background:rgba(79,110,247,.05);}
+.kwt tr.sel td{background:rgba(79,110,247,.12);}
+.tab-row{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px;}
+.tab{padding:9px 18px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.plist{max-height:200px;overflow-y:auto;}
+.pi{padding:8px 0;border-bottom:1px solid rgba(46,51,80,.4);font-size:12px;}
+.pi:last-child{border-bottom:none;}
+.pt{font-weight:600;}
+.pu{color:var(--accent);font-size:11px;word-break:break-all;}
+.pw{color:var(--yellow);font-size:11px;margin-top:1px;}
+.pr{color:var(--red);font-size:11px;margin-top:1px;}
+.art-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:30px 36px;font-size:15px;line-height:1.8;}
+.art-wrap h1{font-size:26px;font-weight:800;margin-bottom:16px;line-height:1.3;}
+.art-wrap h2{font-size:19px;font-weight:700;margin:28px 0 10px;color:#a5b4fc;}
+.art-wrap h3{font-size:15px;font-weight:700;margin:16px 0 8px;color:var(--muted);}
+.art-wrap p{margin-bottom:14px;}
+.art-wrap ul{margin:8px 0 14px 20px;}
+.art-wrap li{margin-bottom:5px;}
+.art-wrap a{color:var(--accent);text-decoration:none;border-bottom:1px dashed var(--accent);}
+.art-wrap strong{color:#fff;}
+.kpbox{background:rgba(79,110,247,.09);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 18px;margin:14px 0 20px;}
+.kpbox strong{display:block;margin-bottom:8px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);}
+pre#rawmd{display:none;background:#0d1117;border:1px solid var(--border);border-radius:var(--radius);padding:20px;font-family:'Courier New',monospace;font-size:12px;line-height:1.6;color:#cdd9e5;white-space:pre-wrap;word-break:break-word;max-height:600px;overflow-y:auto;}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0;}
+.chip{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--muted);}
+.chip strong{color:var(--text);}
+.tones{display:flex;gap:8px;flex-wrap:wrap;}
+.tones input[type=radio]{display:none;}
+.tones label{padding:6px 14px;border-radius:6px;background:var(--surface);border:1px solid var(--border);cursor:pointer;font-size:13px;color:var(--muted);transition:all .2s;text-transform:none;letter-spacing:0;}
+.tones input:checked+label{background:var(--accent);border-color:var(--accent);color:#fff;}
+.intent-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;}
+.intent-info{background:rgba(79,110,247,.15);color:#a5b4fc;}
+.intent-comm{background:rgba(34,197,94,.15);color:var(--green);}
+.intent-nav{background:rgba(245,158,11,.15);color:var(--yellow);}
+.section-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-top:16px;}
+.section-box-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;}
+@media(max-width:640px){.g2,.g3{grid-template-columns:1fr;}.art-wrap{padding:18px;}.steps-nav{flex-wrap:wrap;}}
 </style>
 </head>
 <body>
-
 <div class="header">
   <span style="font-size:24px">✍️</span>
-  <div>
-    <h1>SEO Blog Generator</h1>
-    <p>Ahrefs keyword research → human-quality, SEO-optimized blog articles · April 2026 best practices</p>
-  </div>
+  <div><h1>SEO Blog Generator</h1><p>AI-powered keyword research → human-quality, SEO-optimized articles · April 2026 best practices</p></div>
 </div>
-
 <div class="main">
 
 <!-- NAV -->
 <div class="steps-nav">
-  <div class="step-pill active" id="n1" onclick="nav(1)"><span class="sn">1</span>Client</div>
-  <div class="step-pill" id="n2" onclick="nav(2)"><span class="sn">2</span>API Keys</div>
-  <div class="step-pill" id="n3" onclick="nav(3)"><span class="sn">3</span>Keywords</div>
-  <div class="step-pill" id="n4" onclick="nav(4)"><span class="sn">4</span>Site</div>
-  <div class="step-pill" id="n5" onclick="nav(5)"><span class="sn">5</span>Generate</div>
-  <div class="step-pill" id="n6" onclick="nav(6)"><span class="sn">6</span>Article</div>
+  <div class="sp active" id="n1" onclick="nav(1)"><span class="sn">1</span>Client</div>
+  <div class="sp" id="n2" onclick="nav(2)"><span class="sn">2</span>API Keys</div>
+  <div class="sp" id="n3" onclick="nav(3)"><span class="sn">3</span>Keywords</div>
+  <div class="sp" id="n4" onclick="nav(4)"><span class="sn">4</span>Site Check</div>
+  <div class="sp" id="n5" onclick="nav(5)"><span class="sn">5</span>Configure</div>
+  <div class="sp" id="n6" onclick="nav(6)"><span class="sn">6</span>Article</div>
 </div>
 
 <!-- ═══ STEP 1 ═══ -->
 <div id="s1">
   <div class="card">
     <div class="card-title">🏢 Client Information</div>
-    <div class="card-desc">This is woven naturally into every article for local SEO authority and brand recognition.</div>
-    <div class="grid2">
-      <div class="fg"><label>Business Name *</label><input id="c-name" placeholder="e.g. Smith & Associates CPA"></div>
+    <div class="card-desc">This info is woven into every article for local SEO authority and brand recognition.</div>
+    <div class="g2">
+      <div class="fg"><label>Business Name *</label><input id="c-name" placeholder="e.g. Heritage Masonry Co."></div>
       <div class="fg"><label>Location (City, State) *</label><input id="c-loc" placeholder="e.g. Boston, Massachusetts"></div>
-      <div class="fg"><label>Industry / Primary Service *</label><input id="c-ind" placeholder="e.g. Tax Preparation, Plumbing, Divorce Law"></div>
-      <div class="fg"><label>Website URL *</label><input id="c-url" placeholder="https://smithcpa.com"></div>
-      <div class="fg full"><label>Competitor Domains (comma-separated — never linked to)</label><input id="c-comp" placeholder="turbotax.com, hrblock.com, taxact.com"><span class="hint">External links in articles will never point to these.</span></div>
-      <div class="fg full"><label>Local CTA Template</label><input id="c-cta" placeholder="Looking for tax preparation in Massachusetts? Try {businessName}"><span class="hint">Use {businessName} and {location} as placeholders — woven in organically.</span></div>
+      <div class="fg"><label>Industry / Primary Service *</label><input id="c-ind" placeholder="e.g. Historic Masonry Restoration"></div>
+      <div class="fg"><label>Website URL *</label><input id="c-url" placeholder="https://heritagemasonryco.com"></div>
+      <div class="fg full"><label>Business Description *</label>
+        <textarea id="c-desc" rows="3" placeholder="Describe what the business does, who they serve, where they operate, and what makes them unique. e.g. Heritage Masonry Co. is a Boston-based masonry restoration company specializing in historic brick and stone work for residential and commercial clients across New England."></textarea>
+        <span class="hint">Used to generate relevant keyword ideas tailored to the business.</span>
+      </div>
+      <div class="fg full"><label>Competitor Domains (comma-separated)</label>
+        <input id="c-comp" placeholder="competitor1.com, competitor2.com">
+        <span class="hint">External links in articles will never point to these domains.</span>
+      </div>
+      <div class="fg full"><label>Local CTA Template</label>
+        <input id="c-cta" placeholder="Looking for historic masonry restoration in Boston? Call {businessName} today.">
+        <span class="hint">Use {businessName} and {location} as placeholders — woven in organically.</span>
+      </div>
     </div>
     <div class="actions"><button class="btn btn-p" onclick="step1next()">Continue to API Keys →</button></div>
   </div>
@@ -161,13 +149,33 @@ pre#rawmd { display: none; background: #0d1117; border: 1px solid var(--border);
 <!-- ═══ STEP 2 ═══ -->
 <div id="s2" class="hidden">
   <div class="card">
-    <div class="card-title">🔑 API Keys</div>
-    <div class="card-desc">Keys are stored only in this browser tab's memory — never saved to disk or sent anywhere except the official APIs.</div>
-    <div class="grid2">
-      <div class="fg full"><label>Ahrefs API Token *</label><input type="password" id="k-ahrefs" placeholder="Paste your Ahrefs v3 API token"><span class="hint">Ahrefs → Account Settings → API. Requires Standard plan or above.</span></div>
-      <div class="fg full"><label>OpenAI API Key *</label><input type="password" id="k-oai" placeholder="sk-..."><span class="hint">Articles are generated with GPT-4o for maximum human-like quality.</span></div>
-      <div class="fg"><label>Max Keyword Difficulty (KD)</label><input type="number" id="k-kd" value="20" min="1" max="100"><span class="hint">≤20 = easy wins. ≤35 = medium competition.</span></div>
-      <div class="fg"><label>Min Monthly Search Volume</label><input type="number" id="k-vol" value="50" min="1"><span class="hint">Filters out zero-traffic keywords.</span></div>
+    <div class="card-title">🔑 API Keys & Settings</div>
+    <div class="card-desc">Keys are stored only in this browser tab — never saved to disk or sent anywhere except the official APIs.</div>
+    <div class="g2">
+      <div class="fg full"><label>OpenAI API Key *</label>
+        <input type="password" id="k-oai" placeholder="sk-...">
+        <span class="hint">Used for keyword research AND article generation. Get yours at platform.openai.com</span>
+      </div>
+      <div class="fg full"><label>OpenAI Model</label>
+        <select id="k-model">
+          <option value="gpt-4o">GPT-4o — Best quality (higher cost)</option>
+          <option value="gpt-4o-mini" selected>GPT-4o Mini — Great quality, much cheaper ✓ Recommended</option>
+          <option value="gpt-4-turbo">GPT-4 Turbo — High quality</option>
+        </select>
+        <span class="hint">If you get quota errors, switch to GPT-4o Mini — it costs ~20x less.</span>
+      </div>
+      <div class="fg full"><label>Ahrefs API Token (optional)</label>
+        <input type="password" id="k-ahrefs" placeholder="Paste your Ahrefs v3 token — leave blank to use AI keyword generation instead">
+        <span class="hint">If left blank, OpenAI will generate keyword ideas based on your business description. You can cross-check volume/KD in Ahrefs manually.</span>
+      </div>
+      <div class="fg"><label>Max Keyword Difficulty (KD)</label>
+        <input type="number" id="k-kd" value="20" min="1" max="100">
+        <span class="hint">≤20 = easy wins. ≤35 = medium competition.</span>
+      </div>
+      <div class="fg"><label>Min Monthly Search Volume</label>
+        <input type="number" id="k-vol" value="50" min="1">
+        <span class="hint">Filters out near-zero traffic keywords.</span>
+      </div>
     </div>
     <div class="actions">
       <button class="btn btn-s" onclick="nav(1)">← Back</button>
@@ -180,59 +188,113 @@ pre#rawmd { display: none; background: #0d1117; border: 1px solid var(--border);
 <div id="s3" class="hidden">
   <div class="card">
     <div class="card-title">🔍 Keyword Research</div>
-    <div class="card-desc">Enter a seed topic and pull low-difficulty keywords from Ahrefs. Select one to build your article around.</div>
-    <div class="grid2">
-      <div class="fg"><label>Seed Keyword / Topic *</label><input id="seed" placeholder="e.g. tax preparation, estate planning" onkeydown="if(event.key==='Enter')fetchKw()"></div>
-      <div class="fg"><label>Target Country</label>
-        <select id="kw-country">
-          <option value="us">🇺🇸 United States</option><option value="gb">🇬🇧 United Kingdom</option>
-          <option value="ca">🇨🇦 Canada</option><option value="au">🇦🇺 Australia</option>
-          <option value="in">🇮🇳 India</option><option value="de">🇩🇪 Germany</option><option value="fr">🇫🇷 France</option>
-        </select>
+    <div class="card-desc">Generate keyword ideas tailored to this business, then select one to build your article around.</div>
+
+    <div class="tab-row">
+      <div class="tab active" id="tab-ai" onclick="switchTab('ai')">🤖 AI Keyword Generator</div>
+      <div class="tab" id="tab-ahrefs" onclick="switchTab('ahrefs')">📊 Pull from Ahrefs</div>
+      <div class="tab" id="tab-manual" onclick="switchTab('manual')">✏️ Enter Manually</div>
+    </div>
+
+    <!-- AI Tab -->
+    <div id="tab-ai-content">
+      <div class="g2">
+        <div class="fg">
+          <label>Seed Topic / Service Area (optional)</label>
+          <input id="ai-seed" placeholder="e.g. brick restoration, repointing, chimney repair">
+          <span class="hint">Leave blank to generate ideas purely from your business description.</span>
+        </div>
+        <div class="fg">
+          <label>Target Country</label>
+          <select id="ai-country">
+            <option value="United States">🇺🇸 United States</option>
+            <option value="United Kingdom">🇬🇧 United Kingdom</option>
+            <option value="Canada">🇨🇦 Canada</option>
+            <option value="Australia">🇦🇺 Australia</option>
+          </select>
+        </div>
+      </div>
+      <div class="actions al" style="margin-top:14px">
+        <button class="btn btn-p" id="ai-kw-btn" onclick="generateAIKeywords()">🤖 Generate Keyword Ideas</button>
       </div>
     </div>
-    <div class="actions al"><button class="btn btn-p" id="fetchBtn" onclick="fetchKw()">🔎 Pull from Ahrefs</button></div>
-    <div id="kw-status" class="hidden" style="margin-top:14px"></div>
 
-    <!-- Manual fallback -->
-    <div class="manual-kw" id="manual-kw" style="display:none">
-      <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--yellow)">⚡ Manual Keyword Entry</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Ahrefs direct calls are blocked by browser CORS policy — this is normal. Enter your target keyword manually, or paste a list below (one per line).</div>
-      <div class="fg"><label>Target keyword(s) — one per line</label><textarea id="manual-kws" rows="4" placeholder="tax preparation for small businesses&#10;best tax accountant massachusetts&#10;small business tax filing tips"></textarea></div>
+    <!-- Ahrefs Tab -->
+    <div id="tab-ahrefs-content" class="hidden">
+      <div class="g2">
+        <div class="fg">
+          <label>Seed Keyword *</label>
+          <input id="ahrefs-seed" placeholder="e.g. masonry restoration" onkeydown="if(event.key==='Enter')fetchAhrefsKw()">
+        </div>
+        <div class="fg">
+          <label>Country</label>
+          <select id="ahrefs-country">
+            <option value="us">🇺🇸 United States</option><option value="gb">🇬🇧 United Kingdom</option>
+            <option value="ca">🇨🇦 Canada</option><option value="au">🇦🇺 Australia</option>
+          </select>
+        </div>
+      </div>
+      <div class="actions al" style="margin-top:14px">
+        <button class="btn btn-p" id="ahrefs-btn" onclick="fetchAhrefsKw()">📊 Pull from Ahrefs</button>
+      </div>
+    </div>
+
+    <!-- Manual Tab -->
+    <div id="tab-manual-content" class="hidden">
+      <div class="fg">
+        <label>Keywords — one per line</label>
+        <textarea id="manual-kws" rows="5" placeholder="masonry restoration boston&#10;historic brick repair&#10;spalling brick repair cost&#10;repointing mortar contractor"></textarea>
+      </div>
       <div style="margin-top:10px"><button class="btn btn-p btn-sm" onclick="loadManualKws()">Use These Keywords →</button></div>
     </div>
 
-    <div id="kw-table-wrap" class="hidden" style="margin-top:16px">
+    <div id="kw-status" class="hidden" style="margin-top:14px"></div>
+
+    <div id="kw-table-wrap" class="hidden" style="margin-top:18px">
       <div style="font-size:13px;font-weight:700;margin-bottom:10px" id="kw-count-label"></div>
       <div style="overflow-x:auto">
-        <table class="kwt"><thead><tr><th>Keyword</th><th>KD</th><th>Monthly Volume</th><th>CPC</th><th></th></tr></thead>
+        <table class="kwt"><thead><tr><th>Keyword</th><th>Intent</th><th>KD Est.</th><th>Notes</th><th></th></tr></thead>
         <tbody id="kw-body"></tbody></table>
       </div>
     </div>
   </div>
   <div class="actions">
     <button class="btn btn-s" onclick="nav(2)">← Back</button>
-    <button class="btn btn-p" id="kw-next" onclick="nav(4)" disabled>Analyze Site for This Keyword →</button>
+    <button class="btn btn-p" id="kw-next" onclick="nav(4)" disabled>Check Site for Cannibalization →</button>
   </div>
 </div>
 
 <!-- ═══ STEP 4 ═══ -->
 <div id="s4" class="hidden">
   <div class="card">
-    <div class="card-title">🌐 Site Analysis</div>
-    <div class="card-desc">Checking your website for existing articles (cannibalization) and finding internal pages to link to.</div>
-    <div id="site-status"></div>
-    <div id="site-results" class="hidden">
-      <div id="cannibal-banner"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px">
-        <div><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">📎 Pages for Internal Links</div><div id="int-list" class="plist"></div></div>
-        <div><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">⚠️ Cannibalization Check</div><div id="can-list" class="plist"></div></div>
+    <div class="card-title">🔎 Cannibalization & Internal Links Check</div>
+    <div class="card-desc">Paste your existing blog post titles (and optional URLs) so we can check for keyword overlap. The more detail you give, the more accurate the check.</div>
+
+    <div id="s4-kw-display" style="margin-bottom:16px"></div>
+
+    <div class="fg">
+      <label>Your Existing Blog Posts / Pages — paste titles or URLs, one per line *</label>
+      <textarea id="existing-posts" rows="8" placeholder="How to Fix Spalling Brick on a Historic Home&#10;Tuckpointing vs Repointing: What's the Difference?&#10;https://heritagemasonryco.com/blog/chimney-repair-boston&#10;5 Signs Your Brick Mortar Needs Replacing&#10;Historic Preservation Guidelines for Massachusetts Homeowners"></textarea>
+      <span class="hint">Paste blog titles, page titles, or full URLs. The more you add, the better the cannibalization detection.</span>
+    </div>
+
+    <div class="actions al" style="margin-top:14px">
+      <button class="btn btn-p" id="check-btn" onclick="runCannibalCheck()">🔍 Analyze for Cannibalization</button>
+    </div>
+    <div id="cannibal-result" class="hidden" style="margin-top:16px"></div>
+
+    <div class="section-box" style="margin-top:20px">
+      <div class="section-box-title">📎 Internal Pages for Linking (optional but recommended)</div>
+      <div class="fg">
+        <label>Key pages on your site you'd like the article to link to</label>
+        <textarea id="internal-pages" rows="5" placeholder="Services page: https://heritagemasonryco.com/services&#10;About us: https://heritagemasonryco.com/about&#10;Contact / Free Estimate: https://heritagemasonryco.com/contact&#10;Historic Restoration Portfolio: https://heritagemasonryco.com/portfolio"></textarea>
+        <span class="hint">Format: Page Name: URL — or just URLs. These get naturally linked in the article.</span>
       </div>
     </div>
   </div>
   <div class="actions">
     <button class="btn btn-s" onclick="nav(3)">← Back</button>
-    <button class="btn btn-p" id="site-next" onclick="nav(5)" disabled>Configure & Generate →</button>
+    <button class="btn btn-p" id="s4-next" onclick="nav(5)">Continue to Configure →</button>
   </div>
 </div>
 
@@ -240,21 +302,57 @@ pre#rawmd { display: none; background: #0d1117; border: 1px solid var(--border);
 <div id="s5" class="hidden">
   <div class="card">
     <div class="card-title">⚙️ Article Configuration</div>
-    <div class="card-desc">Review settings then hit generate. GPT-4o will write a ~750-word article tuned to pass AI detection.</div>
-    <div id="gen-summary"></div>
-    <div class="grid2" style="margin-top:20px">
-      <div class="fg full"><label>Additional Instructions (optional)</label>
-        <textarea id="extra-notes" rows="3" placeholder="e.g. Mention we offer free consultations. Focus on homeowners not businesses. Don't mention pricing."></textarea></div>
-      <div class="fg full"><label>Tone</label>
+    <div class="card-desc">The more detail you provide here, the more targeted and human-sounding your article will be.</div>
+    <div id="s5-summary" style="margin-bottom:20px"></div>
+
+    <div class="g2">
+      <div class="fg">
+        <label>Target Audience *</label>
+        <input id="audience" placeholder="e.g. Homeowners with pre-1950s brick homes in Boston">
+      </div>
+      <div class="fg">
+        <label>Target Word Count</label>
+        <select id="word-count">
+          <option value="500">~500 words (short, punchy)</option>
+          <option value="750" selected>~750 words (standard blog)</option>
+          <option value="1000">~1,000 words (in-depth)</option>
+          <option value="1500">~1,500 words (pillar content)</option>
+        </select>
+      </div>
+      <div class="fg full">
+        <label>Audience Pain Points / Questions</label>
+        <textarea id="pain-points" rows="2" placeholder="e.g. Worried about costly repairs, don't know if their brick is structurally safe, confused about historic preservation rules"></textarea>
+      </div>
+      <div class="fg full">
+        <label>Primary Goal of This Article</label>
+        <select id="article-goal">
+          <option value="generate leads">Generate leads / inquiries</option>
+          <option value="educate and build trust">Educate and build trust</option>
+          <option value="rank for local service">Rank for local service keyword</option>
+          <option value="answer a common customer question">Answer a common customer question</option>
+          <option value="showcase expertise">Showcase expertise / thought leadership</option>
+        </select>
+      </div>
+      <div class="fg full">
+        <label>Tone</label>
         <div class="tones">
           <input type="radio" name="tone" id="t1" value="professional" checked><label for="t1">Professional</label>
           <input type="radio" name="tone" id="t2" value="conversational"><label for="t2">Conversational</label>
           <input type="radio" name="tone" id="t3" value="authoritative"><label for="t3">Authoritative</label>
-          <input type="radio" name="tone" id="t4" value="warm"><label for="t4">Warm & Friendly</label>
+          <input type="radio" name="tone" id="t4" value="warm and approachable"><label for="t4">Warm & Friendly</label>
         </div>
       </div>
+      <div class="fg full">
+        <label>Topics / Points to Include (optional)</label>
+        <textarea id="include-topics" rows="2" placeholder="e.g. Mention we do free estimates, talk about the difference between modern and historic mortar mixes, include info about Massachusetts historic preservation tax credits"></textarea>
+      </div>
+      <div class="fg full">
+        <label>Topics / Claims to Avoid (optional)</label>
+        <textarea id="avoid-topics" rows="2" placeholder="e.g. Don't mention pricing, avoid DIY advice, don't reference competitors by name"></textarea>
+      </div>
     </div>
-    <div class="actions al" style="margin-top:20px">
+
+    <div class="actions al" style="margin-top:22px">
       <button class="btn btn-p" id="gen-btn" onclick="generateArticle()">✍️ Generate Article</button>
     </div>
     <div id="gen-status" class="hidden" style="margin-top:14px"></div>
@@ -283,363 +381,381 @@ pre#rawmd { display: none; background: #0d1117; border: 1px solid var(--border);
   </div>
 </div>
 
-</div><!-- /main -->
+</div>
 
 <script>
-// ── STATE ──────────────────────────────────────────────────────────────────
-const S = {
-  name:'', loc:'', ind:'', url:'', comp:'', cta:'',
-  ahrefsKey:'', oaiKey:'', kdMax:20, volMin:50, country:'us',
-  kw: null, pages:[], cannibal:[], article:'', done: new Set()
+const S={
+  name:'',loc:'',ind:'',url:'',desc:'',comp:'',cta:'',
+  oaiKey:'',ahrefsKey:'',model:'gpt-4o-mini',kdMax:20,volMin:50,
+  kw:null,kwIntent:'',existingPosts:[],internalPages:[],
+  cannibalRisk:'none',article:'',done:new Set()
 };
 
-// ── NAVIGATION ─────────────────────────────────────────────────────────────
-function nav(n) {
+// ── NAV ───────────────────────────────────────────────────────────────────
+function nav(n){
   for(let i=1;i<=6;i++){
-    id('s'+i).classList.toggle('hidden', i!==n);
-    const p=id('n'+i);
-    p.classList.remove('active','done');
+    id('s'+i).classList.toggle('hidden',i!==n);
+    const p=id('n'+i); p.classList.remove('active','done');
     if(i===n) p.classList.add('active');
     else if(S.done.has(i)) p.classList.add('done');
   }
-  if(n===4 && S.pages.length===0) startSiteAnalysis();
-  if(n===5) buildGenSummary();
+  if(n===5) buildS5Summary();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ── STEP 1 ─────────────────────────────────────────────────────────────────
+// ── STEP 1 ───────────────────────────────────────────────────────────────
 function step1next(){
-  S.name = val('c-name'); S.loc = val('c-loc'); S.ind = val('c-ind');
-  S.url  = val('c-url');  S.comp= val('c-comp'); S.cta = val('c-cta');
-  if(!S.name||!S.ind||!S.url){ alert('Please fill in Business Name, Industry, and Website URL.'); return; }
+  S.name=val('c-name'); S.loc=val('c-loc'); S.ind=val('c-ind');
+  S.url=val('c-url'); S.desc=val('c-desc'); S.comp=val('c-comp'); S.cta=val('c-cta');
+  if(!S.name||!S.ind||!S.url||!S.desc){alert('Please fill in Business Name, Industry, Website URL, and Business Description.');return;}
   S.done.add(1); nav(2);
 }
 
-// ── STEP 2 ─────────────────────────────────────────────────────────────────
+// ── STEP 2 ───────────────────────────────────────────────────────────────
 function step2next(){
-  S.ahrefsKey = val('k-ahrefs'); S.oaiKey = val('k-oai');
-  S.kdMax = parseInt(val('k-kd'))||20; S.volMin = parseInt(val('k-vol'))||50;
-  if(!S.ahrefsKey||!S.oaiKey){ alert('Both API keys are required.'); return; }
+  S.oaiKey=val('k-oai'); S.ahrefsKey=val('k-ahrefs');
+  S.model=val('k-model'); S.kdMax=parseInt(val('k-kd'))||20; S.volMin=parseInt(val('k-vol'))||50;
+  if(!S.oaiKey){alert('OpenAI API key is required.');return;}
   S.done.add(2); nav(3);
 }
 
-// ── STEP 3: AHREFS KEYWORDS ────────────────────────────────────────────────
-async function fetchKw(){
-  const seed = val('seed');
-  if(!seed){ alert('Enter a seed keyword.'); return; }
-  S.country = val('kw-country');
-
-  const btn = id('fetchBtn');
-  btn.disabled=true; btn.innerHTML='<div class="spin"></div> Fetching…';
-  id('kw-table-wrap').classList.add('hidden');
-  id('manual-kw').style.display='none';
-  status('kw-status','info',`Querying Ahrefs for low-KD keywords around "<strong>${esc(seed)}</strong>"…`,true);
-
-  // Ahrefs v3 API — direct browser call
-  const whereFilter = JSON.stringify({and:[
-    {field:'keyword_difficulty',is:['lte',S.kdMax]},
-    {field:'volume',is:['gte',S.volMin]}
-  ]});
-  const params = new URLSearchParams({
-    country: S.country, keyword: seed, limit: 25,
-    order_by: 'volume:desc', where: whereFilter
+// ── STEP 3 TABS ───────────────────────────────────────────────────────────
+function switchTab(t){
+  ['ai','ahrefs','manual'].forEach(x=>{
+    id('tab-'+x).classList.toggle('active',x===t);
+    id('tab-'+x+'-content').classList.toggle('hidden',x!==t);
   });
+}
 
-  try {
-    const r = await fetch(`https://api.ahrefs.com/v3/keywords-explorer/matching-terms?${params}`,{
-      headers:{ Authorization:`Bearer ${S.ahrefsKey}`, Accept:'application/json' }
-    });
+// AI keyword generation
+async function generateAIKeywords(){
+  const seed=val('ai-seed'); const country=val('ai-country');
+  const btn=id('ai-kw-btn'); btn.disabled=true; btn.innerHTML='<div class="spin"></div> Generating…';
+  id('kw-table-wrap').classList.add('hidden');
+  status('kw-status','info','🤖 Generating keyword ideas tailored to your business…',true);
 
-    if(r.status===401){ status('kw-status','err','❌ Invalid Ahrefs token — check Account → API in Ahrefs.'); showManual(); return; }
-    if(r.status===402){ status('kw-status','err','❌ Your Ahrefs plan doesn\'t include Keywords Explorer API access.'); showManual(); return; }
-    if(!r.ok){ status('kw-status','err',`❌ Ahrefs error ${r.status}. See console for details.`); showManual(); return; }
+  const prompt=`You are an expert SEO keyword researcher. Based on the business description below, generate 20 low-competition keyword ideas that this business could realistically rank for on Google in ${country}.
 
-    const data = await r.json();
-    const kws = (data.keywords||data.data||[]).map(k=>({
-      keyword: k.keyword||'', kd: k.keyword_difficulty||k.difficulty||k.kd||0,
-      volume: k.volume||0, cpc: k.cpc||0
-    }));
-    if(!kws.length){ status('kw-status','warn','⚠️ No keywords found — try a broader seed or raise the KD/Volume limits.'); showManual(); return; }
-    status('kw-status','ok',`✅ Found <strong>${kws.length}</strong> low-difficulty keywords.`);
-    renderKwTable(kws);
+Business: ${S.name}
+Industry: ${S.ind}
+Location: ${S.loc}
+Description: ${S.desc}
+${seed?'Focus area: '+seed:''}
 
-  } catch(e) {
-    // CORS or network error — show manual entry
-    status('kw-status','warn','⚠️ Browser CORS policy blocked the Ahrefs call (this is normal). Use manual entry below, or run keywords through Ahrefs and paste them here.');
-    showManual();
-  } finally {
-    btn.disabled=false; btn.innerHTML='🔎 Pull from Ahrefs';
+Requirements:
+- Keywords should have estimated KD (keyword difficulty) of ${S.kdMax} or below
+- Monthly search volume likely ${S.volMin}+ searches
+- Mix of informational, commercial, and local intent keywords
+- Include long-tail variations and question-based keywords
+- Be specific and realistic for this business niche
+
+Return ONLY a JSON array of 20 objects. No other text. Format:
+[{"keyword":"exact keyword phrase","intent":"informational|commercial|local","kd_estimate":"low|medium","notes":"brief reason this fits the business"}]`;
+
+  try{
+    const res=await oaiCall([{role:'user',content:prompt}],{model:'gpt-4o-mini',temperature:0.7,max_tokens:1500});
+    const txt=res.choices[0].message.content.trim();
+    const jsonStr=txt.match(/\[[\s\S]*\]/)?.[0]||txt;
+    const kws=JSON.parse(jsonStr);
+    status('kw-status','ok',`✅ Generated <strong>${kws.length}</strong> keyword ideas for ${S.name}. Select one below.`);
+    renderKwTable(kws,'ai');
+  }catch(e){
+    handleOaiError(e,'kw-status');
+  }finally{
+    btn.disabled=false; btn.innerHTML='🤖 Generate Keyword Ideas';
   }
 }
 
-function showManual(){ id('manual-kw').style.display='block'; }
-
-function loadManualKws(){
-  const lines = val('manual-kws').split('\n').map(l=>l.trim()).filter(Boolean);
-  if(!lines.length){ alert('Enter at least one keyword.'); return; }
-  const kws = lines.map(k=>({keyword:k,kd:null,volume:null,cpc:null}));
-  id('kw-status').classList.remove('hidden');
-  id('kw-status').className='sb ok';
-  id('kw-status').innerHTML=`✅ Loaded <strong>${kws.length}</strong> keyword(s) manually.`;
-  renderKwTable(kws);
+// Ahrefs keyword fetch
+async function fetchAhrefsKw(){
+  if(!S.ahrefsKey){alert('Enter your Ahrefs token in Step 2 first.');return;}
+  const seed=val('ahrefs-seed'); const country=val('ahrefs-country');
+  if(!seed){alert('Enter a seed keyword.');return;}
+  const btn=id('ahrefs-btn'); btn.disabled=true; btn.innerHTML='<div class="spin"></div> Fetching…';
+  status('kw-status','info',`Querying Ahrefs for "${esc(seed)}"…`,true);
+  const where=JSON.stringify({and:[{field:'keyword_difficulty',is:['lte',S.kdMax]},{field:'volume',is:['gte',S.volMin]}]});
+  const params=new URLSearchParams({country,keyword:seed,limit:25,order_by:'volume:desc',where});
+  try{
+    const r=await fetch(`https://api.ahrefs.com/v3/keywords-explorer/matching-terms?${params}`,{
+      headers:{Authorization:`Bearer ${S.ahrefsKey}`,Accept:'application/json'}
+    });
+    if(r.status===401){status('kw-status','err','❌ Invalid Ahrefs token.');return;}
+    if(!r.ok){status('kw-status','warn','⚠️ Ahrefs blocked by browser security — switch to AI tab or Manual tab.');return;}
+    const data=await r.json();
+    const kws=(data.keywords||data.data||[]).map(k=>({keyword:k.keyword,kd_estimate:k.keyword_difficulty<=20?'low':'medium',intent:'informational',notes:`Vol: ${(k.volume||0).toLocaleString()} · KD: ${k.keyword_difficulty||0}`}));
+    if(!kws.length){status('kw-status','warn','No keywords found — try a broader seed or increase limits.');return;}
+    status('kw-status','ok',`✅ Found <strong>${kws.length}</strong> keywords from Ahrefs.`);
+    renderKwTable(kws,'ahrefs');
+  }catch(e){
+    status('kw-status','warn','⚠️ Browser blocked Ahrefs request. Switch to the AI tab — it works without Ahrefs.');
+  }finally{btn.disabled=false;btn.innerHTML='📊 Pull from Ahrefs';}
 }
 
-function renderKwTable(kws){
-  id('kw-count-label').textContent = `${kws.length} Keyword${kws.length!==1?'s':''} — click a row to select`;
-  const tb = id('kw-body'); tb.innerHTML='';
+// Manual keywords
+function loadManualKws(){
+  const lines=val('manual-kws').split('\n').map(l=>l.trim()).filter(Boolean);
+  if(!lines.length){alert('Enter at least one keyword.');return;}
+  const kws=lines.map(k=>({keyword:k,kd_estimate:'—',intent:'—',notes:'Manually entered'}));
+  status('kw-status','ok',`✅ Loaded <strong>${kws.length}</strong> keyword(s).`);
+  renderKwTable(kws,'manual');
+}
+
+function renderKwTable(kws,src){
+  id('kw-count-label').textContent=`${kws.length} Keyword${kws.length!==1?'s':''} — click a row to select your target`;
+  const tb=id('kw-body'); tb.innerHTML='';
   kws.forEach(k=>{
-    const kd=k.kd; const kdBadge = kd===null ? '<span style="color:var(--muted)">—</span>' :
-      `<span class="kdb ${kd<=20?'kd-e':kd<=40?'kd-m':'kd-h'}">${kd}</span>`;
-    const vol = k.volume!==null ? (k.volume||0).toLocaleString() : '—';
-    const cpc = k.cpc ? '$'+Number(k.cpc).toFixed(2) : '—';
+    const intentCls=k.intent==='commercial'?'intent-comm':k.intent==='local'?'intent-nav':'intent-info';
+    const kdBadge=k.kd_estimate==='low'?'<span class="kdb kd-e">Low</span>':k.kd_estimate==='medium'?'<span class="kdb kd-m">Med</span>':`<span style="color:var(--muted)">${k.kd_estimate||'—'}</span>`;
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td style="font-weight:600">${esc(k.keyword)}</td><td>${kdBadge}</td><td>${vol}</td>
-      <td style="color:var(--muted)">${cpc}</td>
-      <td><button class="btn btn-s btn-sm" onclick="selectKw('${esc(k.keyword)}',this)">Select</button></td>`;
+    tr.innerHTML=`<td style="font-weight:600">${esc(k.keyword)}</td>
+      <td><span class="intent-badge ${intentCls}">${esc(k.intent||'—')}</span></td>
+      <td>${kdBadge}</td>
+      <td style="color:var(--muted);font-size:12px">${esc(k.notes||'')}</td>
+      <td><button class="btn btn-s btn-sm" onclick="selectKw('${esc(k.keyword)}','${esc(k.intent||'')}',this)">Select</button></td>`;
     tb.appendChild(tr);
   });
   id('kw-table-wrap').classList.remove('hidden');
 }
 
-function selectKw(kw, btn){
-  S.kw=kw; S.pages=[]; S.cannibal=[];
+function selectKw(kw,intent,btn){
+  S.kw=kw; S.kwIntent=intent; S.done.add(3);
   document.querySelectorAll('.kwt tr').forEach(r=>r.classList.remove('sel'));
   btn.closest('tr').classList.add('sel'); btn.textContent='✓ Selected';
-  const nb=id('kw-next'); nb.disabled=false; nb.textContent=`Analyze site for "${kw}" →`;
+  const nb=id('kw-next'); nb.disabled=false; nb.textContent=`Check site for "${kw}" →`;
 }
 
-// ── STEP 4: SITE ANALYSIS ──────────────────────────────────────────────────
-async function startSiteAnalysis(){
-  id('site-results').classList.add('hidden');
-  id('site-next').disabled=true;
-  status('site-status','info',`🌐 Crawling ${S.url} for internal pages…`,true);
-
-  let siteUrl = S.url.trim();
-  if(!siteUrl.match(/^https?:\/\//)) siteUrl='https://'+siteUrl;
-
-  // Use allorigins CORS proxy (only used for reading page titles — no credentials sent)
-  const proxy = 'https://api.allorigins.win/raw?url=';
-  const sitemapUrls=['/sitemap.xml','/sitemap_index.xml','/sitemap-index.xml'];
-  let pages=[], sitemapFound=false;
-
-  for(const path of sitemapUrls){
-    try{
-      const r=await fetch(proxy+encodeURIComponent(siteUrl.replace(/\/$/,'')+path),{signal:AbortSignal.timeout(12000)});
-      const txt=await r.text();
-      if(txt.includes('<urlset')||txt.includes('<sitemapindex')){
-        pages=parseSitemap(txt);
-        if(pages.length){ sitemapFound=true; break; }
-      }
-    }catch{}
-  }
-
-  // Fallback: scrape homepage for links
-  if(!pages.length){
-    try{
-      const r=await fetch(proxy+encodeURIComponent(siteUrl),{signal:AbortSignal.timeout(12000)});
-      const html=await r.text();
-      const doc=new DOMParser().parseFromString(html,'text/html');
-      const seen=new Set();
-      doc.querySelectorAll('a[href]').forEach(a=>{
-        try{
-          const u=new URL(a.href, siteUrl);
-          if(u.hostname===new URL(siteUrl).hostname && !seen.has(u.href)){
-            seen.add(u.href); pages.push({url:u.href,title:a.textContent.trim()||u.href,h1:'',meta:''});
-          }
-        }catch{}
-      });
-    }catch{}
-  }
-
-  // Fetch metadata for each page (limited to 25, via proxy)
-  const pageData=[];
-  for(const p of pages.slice(0,25)){
-    const entry={url:typeof p==='string'?p:p.url, title:typeof p==='object'?p.title:'', h1:'', meta:''};
-    try{
-      const r=await fetch(proxy+encodeURIComponent(entry.url),{signal:AbortSignal.timeout(8000)});
-      const html=await r.text();
-      const doc=new DOMParser().parseFromString(html,'text/html');
-      const t=doc.querySelector('title'); const h=doc.querySelector('h1');
-      const m=doc.querySelector('meta[name="description"]');
-      if(t) entry.title=t.textContent.trim();
-      if(h) entry.h1=h.textContent.trim();
-      if(m) entry.meta=m.getAttribute('content')||'';
-    }catch{}
-    pageData.push(entry);
-  }
-
-  S.pages=pageData;
-
-  // Cannibalization: check titles/h1s against target keyword
-  const kwWords=(S.kw||'').toLowerCase().split(/\s+/).filter(w=>w.length>3);
-  S.cannibal=pageData.filter(p=>{
-    const txt=((p.title||'')+(p.h1||'')+(p.meta||'')).toLowerCase();
-    return kwWords.some(w=>txt.includes(w));
-  });
-
-  // Render internal list
-  const intList=id('int-list'); intList.innerHTML='';
-  (pageData.length?pageData:pages).slice(0,20).forEach(p=>{
-    const u=p.url||p; const t=p.title||u;
-    intList.innerHTML+=`<div class="pi"><div class="pt">${esc(t.substring(0,60))}</div><div class="pu">${esc(u)}</div></div>`;
-  });
-  if(!intList.children.length) intList.innerHTML='<div style="color:var(--muted);font-size:12px;padding:8px 0">No pages found — site may block crawlers.</div>';
-
-  // Render cannibalization
-  const canList=id('can-list'); canList.innerHTML='';
-  const banner=id('cannibal-banner');
-  if(!S.cannibal.length){
-    banner.innerHTML=`<div class="sb ok">✅ No cannibalization risk found for "<strong>${esc(S.kw)}</strong>"</div>`;
-    canList.innerHTML='<div style="color:var(--muted);font-size:12px;padding:8px 0">No similar articles detected.</div>';
-  } else {
-    banner.innerHTML=`<div class="sb warn">⚠️ ${S.cannibal.length} existing page(s) may overlap — review before publishing.</div>`;
-    S.cannibal.forEach(p=>{
-      canList.innerHTML+=`<div class="pi"><div class="pt">${esc((p.title||p.url).substring(0,55))}</div><div class="pu">${esc(p.url)}</div><div class="pw">May compete with your keyword</div></div>`;
-    });
-  }
-
-  status('site-status', sitemapFound?'ok':'info',
-    sitemapFound ? `✅ Sitemap found — analyzed ${pageData.length} pages` :
-    `ℹ️ No sitemap found — scraped ${pageData.length} pages from homepage links`);
-  id('site-results').classList.remove('hidden');
-  id('site-next').disabled=false;
+// ── STEP 4 ───────────────────────────────────────────────────────────────
+function nav4setup(){
+  id('s4-kw-display').innerHTML=`<div class="sb info">🎯 Checking for cannibalization with your target keyword: <strong>${esc(S.kw)}</strong></div>`;
 }
 
-function parseSitemap(xml){
+async function runCannibalCheck(){
+  const postsRaw=val('existing-posts');
+  if(!postsRaw){
+    id('cannibal-result').classList.remove('hidden');
+    id('cannibal-result').innerHTML='<div class="sb warn">⚠️ No existing posts entered — skipping cannibalization check. You can still continue.</div>';
+    return;
+  }
+  S.existingPosts=postsRaw.split('\n').map(l=>l.trim()).filter(Boolean);
+  S.internalPages=val('internal-pages').split('\n').map(l=>l.trim()).filter(Boolean);
+
+  const btn=id('check-btn'); btn.disabled=true; btn.innerHTML='<div class="spin"></div> Analyzing…';
+  id('cannibal-result').classList.remove('hidden');
+  id('cannibal-result').innerHTML='<div class="sb info"><div class="spin"></div><span>Analyzing your existing content for keyword overlap…</span></div>';
+
+  const prompt=`You are an SEO expert. Analyze whether any of the existing pages below overlap with or could cannibalize the target keyword.
+
+TARGET KEYWORD: "${S.kw}"
+BUSINESS: ${S.name} (${S.ind})
+
+EXISTING PAGES/POSTS:
+${S.existingPosts.map((p,i)=>`${i+1}. ${p}`).join('\n')}
+
+For each page that shows overlap, rate the risk: HIGH (directly targets same keyword), MEDIUM (related topic, partial overlap), or LOW (minor overlap).
+
+Return ONLY a JSON object:
+{
+  "overallRisk": "none|low|medium|high",
+  "summary": "2-sentence plain English summary",
+  "conflicts": [{"page":"page title or url","risk":"high|medium|low","reason":"why it overlaps"}]
+}`;
+
   try{
-    const doc=new DOMParser().parseFromString(xml,'application/xml');
-    return [...doc.querySelectorAll('loc')].map(l=>l.textContent.trim());
-  }catch{ return []; }
+    const res=await oaiCall([{role:'user',content:prompt}],{model:'gpt-4o-mini',temperature:0.3,max_tokens:800});
+    const txt=res.choices[0].message.content.trim();
+    const json=JSON.parse(txt.match(/\{[\s\S]*\}/)?.[0]||txt);
+    S.cannibalRisk=json.overallRisk||'none';
+
+    const riskColor={none:'ok',low:'info',medium:'warn',high:'err'}[json.overallRisk]||'info';
+    const riskLabel={none:'✅ No cannibalization risk',low:'ℹ️ Low risk',medium:'⚠️ Medium risk — review before publishing',high:'❌ High risk — existing content may compete directly'}[json.overallRisk]||'';
+    let html=`<div class="sb ${riskColor}"><div><strong>${riskLabel}</strong><br><span style="font-size:12px">${esc(json.summary||'')}</span></div></div>`;
+    if(json.conflicts?.length){
+      html+='<div class="section-box"><div class="section-box-title">Overlapping Pages</div>';
+      json.conflicts.forEach(c=>{
+        const cls=c.risk==='high'?'pr':c.risk==='medium'?'pw':'';
+        html+=`<div class="pi"><div class="pt">${esc(c.page)}</div><div class="${cls}">Risk: ${c.risk.toUpperCase()} — ${esc(c.reason)}</div></div>`;
+      });
+      html+='</div>';
+    }
+    id('cannibal-result').innerHTML=html;
+  }catch(e){
+    handleOaiError(e,'cannibal-result');
+  }finally{btn.disabled=false;btn.innerHTML='🔍 Analyze for Cannibalization';}
 }
 
-// ── STEP 5: GENERATE ──────────────────────────────────────────────────────
-function buildGenSummary(){
-  id('gen-summary').innerHTML=`<div class="chips">
-    ${chip('🎯 Keyword',S.kw)} ${chip('🏢 Client',S.name)} ${chip('📍 Location',S.loc||'Not set')}
-    ${chip('🔧 Industry',S.ind)} ${chip('📄 Pages found',S.pages.length)} ${chip('⚠️ Cannibal risk',S.cannibal.length+' pages')}
+// ── STEP 5 ───────────────────────────────────────────────────────────────
+function buildS5Summary(){
+  id('s5-summary').innerHTML=`<div class="chips">
+    ${chip('🎯 Keyword',S.kw)} ${chip('🏢 Client',S.name)} ${chip('📍 Location',S.loc)}
+    ${chip('⚠️ Cannibal Risk',S.cannibalRisk)} ${chip('📄 Existing posts',S.existingPosts.length)} ${chip('🔗 Internal pages',S.internalPages.length)}
   </div>`;
 }
-function chip(l,v){ return `<div class="chip">${l}: <strong>${esc(String(v||''))}</strong></div>`; }
 
 async function generateArticle(isRegen=false){
+  const audience=val('audience'); const wc=val('word-count');
+  const goal=val('article-goal'); const tone=document.querySelector('input[name="tone"]:checked')?.value||'professional';
+  const painPoints=val('pain-points'); const include=val('include-topics'); const avoid=val('avoid-topics');
+
+  if(!audience){alert('Please enter a Target Audience in the fields above.');return;}
+
   const btn=id('gen-btn'); btn.disabled=true; btn.innerHTML='<div class="spin"></div> Writing…';
   id('gen-status').classList.remove('hidden');
-  status('gen-status','info','✍️ GPT-4o is crafting your article — typically 30–60 seconds…',true);
+  status('gen-status','info',`✍️ Writing your ~${wc}-word article — this takes about 30–60 seconds…`,true);
 
-  const tone=document.querySelector('input[name="tone"]:checked')?.value||'professional';
-  const notes=val('extra-notes');
   const ctaLine=(S.cta||`Looking for ${S.ind} in ${S.loc}? ${S.name} is here to help.`)
     .replace('{businessName}',S.name).replace('{location}',S.loc);
 
+  const internalCtx=S.internalPages.length?'INTERNAL PAGES TO LINK TO:\n'+S.internalPages.map(p=>`  • ${p}`).join('\n'):'';
+  const existingCtx=S.existingPosts.length?'EXISTING PAGES (don\'t duplicate their angle):\n'+S.existingPosts.slice(0,6).map(p=>`  • ${p}`).join('\n'):'';
+  const cannibalNote=S.cannibalRisk!=='none'?`NOTE: Cannibalization risk is "${S.cannibalRisk}" — write from a distinct angle that complements existing content.`:'';
+
   const toneGuide={
-    professional:'Expert, direct, authoritative — like a trusted consultant',
-    conversational:'Friendly, casual — like texting a knowledgeable friend',
-    authoritative:'Confident, data-driven, thought-leadership style',
-    warm:'Empathetic, encouraging, community-focused'
+    professional:'Expert, direct, and authoritative — like advice from a trusted specialist',
+    conversational:'Friendly and casual — like a knowledgeable friend giving real advice',
+    authoritative:'Confident, data-driven, thought-leader style',
+    'warm and approachable':'Empathetic and encouraging — community-focused and welcoming'
   }[tone]||'Expert, direct, authoritative';
 
-  const internalCtx = S.pages.filter(p=>p.title||p.h1).slice(0,8).map(p=>`  • ${p.title||p.h1} → ${p.url}`).join('\n');
-  const cannibalCtx = S.cannibal.slice(0,4).map(p=>`  • ${p.title}: ${p.url}`).join('\n');
+  const systemPrompt=`You are a veteran SEO copywriter with 15 years of experience. You write content that consistently ranks on page 1 AND passes every AI-detection tool including GPTZero, Winston AI, Copyleaks, and Originality.ai — because you write like an actual human, not a language model.
 
-  const systemPrompt=`You are a senior SEO copywriter who has been writing web content since 2008. Your articles consistently rank on page 1 and pass every AI-detection tool including GPTZero, Winston AI, Copyleaks, and Originality.ai.
+Your non-negotiable writing rules:
+1. SENTENCE VARIATION IS EVERYTHING. Mix very short punchy sentences (3–6 words) with longer ones (20–30 words). Never write three sentences in a row with similar length.
+2. Contractions are mandatory: don't, won't, you'll, it's, they've, we're, can't, shouldn't.
+3. Begin some sentences with: And, But, So, Or, Yet — it's how people actually write.
+4. Include at least one rhetorical question per section.
+5. One concrete specific detail or number per main section — even rough estimates feel human.
+6. Vary paragraph length: sometimes a single sentence stands alone. Sometimes 3–4 sentences together.
+7. Write with a slight point of view. Not neutral robot copy.
+8. Use second-person ("you", "your") heavily throughout.
+9. BANNED WORDS AND PHRASES — never use these: "In conclusion", "In today's world", "It's worth noting", "It is important to note", "Furthermore", "Moreover", "In the digital age", "Navigating", "Leverage" (as verb), "Delve", "Comprehensive", "Invaluable", "Paramount", "Unlock", "Utilizing", "Facilitate", "Streamline", "In summary", "To summarize", "As mentioned", "It goes without saying".
+10. Never write three paragraphs in a row that all start the same way.
+11. The Key Points bullets must be genuinely specific — not generic marketing fluff.
 
-Your authentic writing fingerprints:
-• Vary sentence length dramatically — some 5 words, some 25. This is the #1 human signal.
-• Use contractions constantly: don't, won't, you'll, it's, they're, we've, can't.
-• Occasionally begin sentences with And, But, or So.
-• Include one rhetorical question per section to hold attention.
-• One specific, concrete detail or number per main section.
-• Vary paragraph length: sometimes 1 sentence, sometimes 3-4.
-• Have a slight opinion — not neutral robot copy.
-• Use second-person ("you", "your") throughout.
-• NEVER USE: "In conclusion", "In today's world", "It's worth noting", "Furthermore", "Moreover", "In the digital age", "Navigating", "Leverage" (verb), "Delve", "Comprehensive", "Invaluable", "Paramount", "Unlock".
-• Tone: ${toneGuide}
+Tone target: ${toneGuide}
 
-The output MUST read like a real expert helping someone, not a content farm template.`;
+This article must read as if written by a real expert who genuinely wants to help the reader — not a content mill.`;
 
-  const userPrompt=`Write a ~750-word SEO blog article for:
+  const userPrompt=`Write a ~${wc}-word SEO blog article with these exact specifications:
 
 TARGET KEYWORD: "${S.kw}"
+SEARCH INTENT: ${S.kwIntent||'informational/commercial'}
 
-BUSINESS DETAILS:
+BUSINESS:
   Name: ${S.name}
   Location: ${S.loc}
   Industry: ${S.ind}
   Website: ${S.url}
-  Competitors (never link to): ${S.comp||'none'}
-${internalCtx ? '\nINTERNAL PAGES FOR LINKING:\n'+internalCtx : ''}
-${cannibalCtx ? '\nEXISTING PAGES (don\'t duplicate their angle):\n'+cannibalCtx : ''}
-${notes ? '\nWRITER NOTES: '+notes : ''}
+  Description: ${S.desc}
+  Competitors to never link to: ${S.comp||'none specified'}
 
-━━━ REQUIRED STRUCTURE ━━━
+AUDIENCE: ${audience}
+${painPoints?'AUDIENCE PAIN POINTS: '+painPoints:''}
+ARTICLE GOAL: ${goal}
+${include?'MUST INCLUDE: '+include:''}
+${avoid?'MUST AVOID: '+avoid:''}
+${cannibalNote}
 
-1. # H1 Title — compelling, keyword-smart (not keyword-stuffed verbatim)
+${internalCtx}
+${existingCtx}
 
-2. Opening paragraph (2–3 sentences)
-   Lead with the reader's pain point or a surprising fact. Include the target keyword naturally.
+━━━ MANDATORY ARTICLE STRUCTURE ━━━
 
-3. **Key Points** block (MANDATORY — right after intro):
+1. # H1 — Compelling, keyword-smart title
+   Rules: Include target keyword naturally. NOT just the keyword verbatim. Make it click-worthy.
+   Bad example: "Masonry Restoration Boston"
+   Good example: "Why Boston's Oldest Brick Homes Need Professional Masonry Restoration"
+
+2. Opening paragraph (2–3 sentences MAX)
+   Open with the reader's problem, a surprising fact, or a specific scenario they'll recognize.
+   Include the target keyword naturally within the first 100 words.
+   Do NOT open with the business name.
+
+3. **Key Points** block — MANDATORY, placed immediately after the intro paragraph:
    **Key Points**
-   • [Concrete takeaway 1]
-   • [Concrete takeaway 2]
-   • [Concrete takeaway 3]
+   • [Specific, concrete takeaway — not vague]
+   • [Specific, concrete takeaway]
+   • [Specific, concrete takeaway]
 
-4. ## H2: [First Question?]  ← phrased as a question
-   ### H3: [Specific sub-angle]
-   90–130 words. Include ONE internal link: [anchor text](url)
+4. ## H2: [Question One?] — MUST be phrased as a reader question
+   ### H3: [Specific sub-angle or tip]
+   [Content — target ${Math.round(parseInt(wc)/4)} words]
+   Include ONE internal link naturally: [descriptive anchor text](url from internal pages list)
 
-5. ## H2: [Second Question?]  ← phrased as a question
-   ### H3: [Specific sub-angle]
-   90–130 words. Include ONE external link to an authoritative non-competitor source.
-   Never link to: ${S.comp||'competitor domains'}
+5. ## H2: [Question Two?] — MUST be phrased as a reader question
+   ### H3: [Specific sub-angle or tip]
+   [Content — target ${Math.round(parseInt(wc)/4)} words]
+   Include ONE external link to an authoritative, non-competitor source (.gov, .edu, major publication, or trade org)
+   Format: [anchor text](https://source.com)
+   Never link to: ${S.comp||'competitor sites'}
 
-6. ## H2: [Third Question?]  ← phrased as a question
-   ### H3: [Specific sub-angle]
-   90–130 words. Weave in this CTA naturally as advice (NOT as an ad):
+6. ## H2: [Question Three?] — MUST be phrased as a reader question
+   ### H3: [Specific sub-angle or tip]
+   [Content — target ${Math.round(parseInt(wc)/4)} words]
+   Weave in this CTA naturally as genuine advice (NOT as a promotional line):
    "${ctaLine}"
+   It must feel organic — like a natural recommendation, not an advertisement.
 
-7. Closing paragraph (2–3 sentences) — reinforce main insight, mention ${S.name} by name, gentle CTA.
+7. Closing paragraph (2–3 sentences)
+   Reinforce the core message. Mention ${S.name} by name. End with a soft, natural CTA to reach out.
 
-━━━ SEO RULES ━━━
-• Target keyword in: H1, first 100 words, ≥1 H2 naturally, closing paragraph
-• 4–6 LSI / semantic keywords throughout
-• "${S.name}" mentioned naturally 2–3 times
-• Reading level: 7th–8th grade
-• All links: [anchor text](url)
+━━━ SEO REQUIREMENTS ━━━
+• Target keyword in: H1, first 100 words, at least one H2 naturally, closing paragraph
+• 5–7 semantically related LSI keywords woven throughout
+• ${S.name} mentioned naturally 2–3 times total (not every paragraph)
+• Reading level: 7th–8th grade — short sentences, plain language, no jargon without explanation
+• All links formatted as markdown: [anchor text](url)
+• Meta description suggestion at the very end (after the article) in format: META: your suggestion here
 
-Return ONLY clean markdown. Start immediately with the # H1.`;
+Return ONLY clean markdown. Start immediately with the # H1. No preamble or explanation.`;
 
   try{
-    const r=await fetch('https://api.openai.com/v1/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':`Bearer ${S.oaiKey}`},
-      body:JSON.stringify({
-        model:'gpt-4o',
-        messages:[{role:'system',content:systemPrompt},{role:'user',content:userPrompt}],
-        temperature:0.82, max_tokens:2200, frequency_penalty:0.35, presence_penalty:0.25
-      })
-    });
-    if(r.status===401){ status('gen-status','err','❌ Invalid OpenAI API key.'); return; }
-    if(r.status===429){ status('gen-status','err','❌ OpenAI rate limit or quota exceeded. Check your billing at platform.openai.com'); return; }
-    if(!r.ok){ const e=await r.json(); status('gen-status','err','❌ OpenAI error: '+(e.error?.message||r.status)); return; }
-    const d=await r.json();
-    const article=d.choices?.[0]?.message?.content?.trim()||'';
-    if(!article){ status('gen-status','err','❌ Empty response from OpenAI. Try again.'); return; }
-    S.article=article;
-    S.done.add(5);
-    nav(6);
-    renderArticle(article);
+    const res=await oaiCall(
+      [{role:'system',content:systemPrompt},{role:'user',content:userPrompt}],
+      {model:S.model,temperature:0.85,max_tokens:3500,frequency_penalty:0.4,presence_penalty:0.3}
+    );
+    const article=res.choices[0].message.content.trim();
+    if(!article){status('gen-status','err','❌ Empty response. Try again.');return;}
+    S.article=article; S.done.add(5);
+    nav(6); renderArticle(article,wc);
   }catch(e){
-    status('gen-status','err','❌ Network error: '+e.message);
-  }finally{
-    btn.disabled=false; btn.innerHTML='✍️ Generate Article';
+    handleOaiError(e,'gen-status');
+  }finally{btn.disabled=false;btn.innerHTML='✍️ Generate Article';}
+}
+
+// ── OPENAI HELPER ─────────────────────────────────────────────────────────
+async function oaiCall(messages,opts={}){
+  const r=await fetch('https://api.openai.com/v1/chat/completions',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':`Bearer ${S.oaiKey}`},
+    body:JSON.stringify({model:S.model,messages,...opts})
+  });
+  if(r.status===401) throw Object.assign(new Error('invalid_key'),{type:'auth'});
+  if(r.status===429){
+    const e=await r.json().catch(()=>({}));
+    throw Object.assign(new Error(e.error?.message||'rate_limit'),{type:'quota'});
+  }
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error?.message||'API error '+r.status);}
+  return r.json();
+}
+
+function handleOaiError(e,containerId){
+  const el=id(containerId); el.classList.remove('hidden');
+  if(e.type==='auth'){
+    el.className='sb err'; el.innerHTML='❌ <strong>Invalid OpenAI API key.</strong> Check it at <a href="https://platform.openai.com/api-keys" target="_blank" style="color:var(--accent)">platform.openai.com/api-keys</a>';
+  } else if(e.type==='quota'||e.message?.includes('quota')||e.message?.includes('billing')){
+    el.className='sb err'; el.innerHTML=`❌ <strong>OpenAI quota exceeded.</strong> Options:<br>
+    1. <strong>Switch to GPT-4o Mini</strong> in Step 2 (go back — it costs ~20× less)<br>
+    2. Add billing credits at <a href="https://platform.openai.com/settings/organization/billing" target="_blank" style="color:var(--accent)">platform.openai.com/billing</a><br>
+    3. Wait a few minutes if you just hit a rate limit, then try again.`;
+  } else {
+    el.className='sb err'; el.innerHTML=`❌ Error: ${esc(e.message||'Unknown error')}`;
   }
 }
 
-// ── STEP 6: RENDER ────────────────────────────────────────────────────────
-function renderArticle(md){
-  const wc=(md.match(/\b\w+\b/g)||[]).length;
-  id('art-chips').innerHTML=`${chip('📝 Words',wc)} ${chip('🎯 Keyword',S.kw)} ${chip('🏢 Client',S.name)} ${chip('🤖 Model','gpt-4o')}`;
+// ── STEP 6 RENDER ─────────────────────────────────────────────────────────
+function renderArticle(md,wc){
+  const words=(md.match(/\b\w+\b/g)||[]).length;
+  id('art-chips').innerHTML=`${chip('📝 Words',words)} ${chip('🎯 Keyword',S.kw)} ${chip('🏢 Client',S.name)} ${chip('🤖 Model',S.model)}`;
   id('art-rendered').innerHTML=md2html(md);
   id('rawmd').textContent=md;
   id('art-rendered').style.display='block';
@@ -647,37 +763,38 @@ function renderArticle(md){
 }
 
 function md2html(md){
-  // Key Points box
   md=md.replace(/\*\*Key Points\*\*\n((?:[•\-\*].+\n?)+)/gi,(_,b)=>{
-    const items=b.trim().split('\n').map(x=>x.replace(/^[•\-\*]\s*/,'').trim());
-    return `<div class="kpbox"><strong>Key Points</strong><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
+    const items=b.trim().split('\n').map(x=>`<li>${x.replace(/^[•\-\*]\s*/,'').trim()}</li>`);
+    return `<div class="kpbox"><strong>Key Points</strong><ul>${items.join('')}</ul></div>`;
   });
   md=md.replace(/^### (.+)$/gm,'<h3>$1</h3>');
   md=md.replace(/^## (.+)$/gm,'<h2>$1</h2>');
   md=md.replace(/^# (.+)$/gm,'<h1>$1</h1>');
   md=md.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
   md=md.replace(/\[([^\]]+)\]\(([^)]+)\)/g,(_,t,u)=>{
-    const ext=u.startsWith('http')&&!u.includes(S.url.replace(/https?:\/\//,''));
+    const ext=u.startsWith('http')&&!u.includes((S.url||'').replace(/https?:\/\//,''));
     return `<a href="${u}"${ext?' target="_blank" rel="noopener"':''}>${t}</a>`;
   });
+  // META line at bottom — style differently
+  md=md.replace(/^META: (.+)$/gm,'<div style="margin-top:28px;padding:12px 16px;background:rgba(79,110,247,.08);border:1px solid rgba(79,110,247,.2);border-radius:8px;font-size:12px;color:var(--muted)"><strong style="color:var(--accent)">📌 Suggested Meta Description</strong><br>$1</div>');
   md=md.replace(/((?:^[•\-\*] .+\n?)+)/gm,m=>{
     const items=m.trim().split('\n').map(l=>`<li>${l.replace(/^[•\-\*]\s*/,'')}</li>`);
     return '<ul>'+items.join('')+'</ul>';
   });
   return md.split(/\n{2,}/).map(b=>{
-    b=b.trim(); if(!b)return '';
-    if(/^<[hHuU]/.test(b))return b;
+    b=b.trim(); if(!b) return '';
+    if(/^<[hHuUd]/.test(b)) return b;
     return '<p>'+b.replace(/\n/g,'<br>')+'</p>';
   }).join('\n');
 }
 
 function toggleRaw(){
   const r=id('rawmd'),a=id('art-rendered');
-  if(r.style.display==='none'){ r.style.display='block'; a.style.display='none'; }
-  else { r.style.display='none'; a.style.display='block'; }
+  if(r.style.display==='none'){r.style.display='block';a.style.display='none';}
+  else{r.style.display='none';a.style.display='block';}
 }
 function copyArt(){
-  navigator.clipboard.writeText(S.article).then(()=>alert('Copied!')).catch(()=>{
+  navigator.clipboard.writeText(S.article).then(()=>alert('Copied to clipboard!')).catch(()=>{
     const t=document.createElement('textarea');t.value=S.article;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);alert('Copied!');
   });
 }
@@ -688,18 +805,24 @@ function dlArt(){
   a.download=slug+'-article.md'; a.click();
 }
 
-// ── STATUS HELPER ─────────────────────────────────────────────────────────
+// ── STATUS ────────────────────────────────────────────────────────────────
 function status(elId,type,msg,spin=false){
-  const el=id(elId);
-  el.className='sb '+type;
-  el.classList.remove('hidden');
+  const el=id(elId); el.className='sb '+type; el.classList.remove('hidden');
   el.innerHTML=(spin?'<div class="spin"></div>':'')+`<span>${msg}</span>`;
 }
 
+// ── INTERCEPT NAV FOR STEP 4 ──────────────────────────────────────────────
+const _nav=nav;
+window.nav=function(n){
+  _nav(n);
+  if(n===4) nav4setup();
+};
+
 // ── UTILS ─────────────────────────────────────────────────────────────────
 const id=x=>document.getElementById(x);
-const val=x=>id(x).value.trim();
+const val=x=>(id(x).value||'').trim();
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const chip=(l,v)=>`<div class="chip">${l}: <strong>${esc(String(v||''))}</strong></div>`;
 </script>
 </body>
 </html>
