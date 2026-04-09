@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEO Blog Generator</title>
+<style>
+:root {
+  --bg: #0f1117; --surface: #1a1d27; --card: #21253a; --border: #2e3350;
+  --accent: #4f6ef7; --accent2: #7c3aed; --green: #22c55e; --yellow: #f59e0b;
+  --red: #ef4444; --text: #e2e8f0; --muted: #8892b0; --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+.header { background: linear-gradient(135deg,#1a1d27,#16192a); border-bottom: 1px solid var(--border); padding: 18px 32px; display: flex; align-items: center; gap: 14px; }
+.header h1 { font-size: 20px; font-weight: 700; }
+.header p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.main { max-width: 920px; margin: 0 auto; padding: 32px 20px 80px; }
+
+/* Steps */
+.steps-nav { display: flex; margin-bottom: 32px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.step-pill { flex: 1; padding: 12px 6px; text-align: center; font-size: 10px; font-weight: 700; color: var(--muted); cursor: pointer; border-right: 1px solid var(--border); transition: all .2s; text-transform: uppercase; letter-spacing: .4px; }
+.step-pill:last-child { border-right: none; }
+.step-pill.active { background: linear-gradient(135deg,var(--accent),var(--accent2)); color: #fff; }
+.step-pill.done { color: var(--green); }
+.step-pill .sn { display: block; font-size: 15px; font-weight: 800; margin-bottom: 1px; }
+
+/* Cards */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 18px; }
+.card-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+.card-desc { font-size: 13px; color: var(--muted); margin-bottom: 22px; line-height: 1.55; }
+
+/* Forms */
+.fg { display: flex; flex-direction: column; gap: 6px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid2 .full { grid-column: 1/-1; }
+label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+input, select, textarea { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 14px; transition: border-color .2s; font-family: inherit; width: 100%; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,110,247,.12); }
+input::placeholder, textarea::placeholder { color: var(--muted); }
+textarea { resize: vertical; }
+.hint { font-size: 11px; color: var(--muted); }
+select option { background: #1a1d27; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: all .2s; }
+.btn-p { background: linear-gradient(135deg,var(--accent),var(--accent2)); color: #fff; box-shadow: 0 4px 14px rgba(79,110,247,.3); }
+.btn-p:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(79,110,247,.4); }
+.btn-p:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.btn-s { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.btn-s:hover { border-color: var(--accent); color: var(--accent); }
+.btn-g { background: var(--green); color: #fff; }
+.btn-sm { padding: 7px 13px; font-size: 12px; }
+.actions { display: flex; gap: 10px; margin-top: 22px; justify-content: flex-end; flex-wrap: wrap; }
+.al { justify-content: flex-start; }
+
+/* Status */
+.sb { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 11px 16px; font-size: 13px; display: flex; align-items: center; gap: 10px; margin-bottom: 14px; line-height: 1.4; }
+.sb.info  { border-color: var(--accent);  background: rgba(79,110,247,.07); }
+.sb.warn  { border-color: var(--yellow);  background: rgba(245,158,11,.07); }
+.sb.err   { border-color: var(--red);     background: rgba(239,68,68,.07); }
+.sb.ok    { border-color: var(--green);   background: rgba(34,197,94,.07); }
+.hidden { display: none !important; }
+
+/* Spinner */
+.spin { width: 15px; height: 15px; border: 2px solid rgba(255,255,255,.2); border-top-color: #fff; border-radius: 50%; animation: sp .7s linear infinite; flex-shrink: 0; }
+@keyframes sp { to { transform: rotate(360deg); } }
+
+/* KD badge */
+.kdb { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 800; }
+.kd-e { background: rgba(34,197,94,.15);  color: var(--green); }
+.kd-m { background: rgba(245,158,11,.15); color: var(--yellow); }
+.kd-h { background: rgba(239,68,68,.15);  color: var(--red); }
+
+/* Table */
+.kwt { width: 100%; border-collapse: collapse; font-size: 13px; }
+.kwt th { background: var(--surface); padding: 9px 13px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); border-bottom: 1px solid var(--border); }
+.kwt td { padding: 10px 13px; border-bottom: 1px solid rgba(46,51,80,.45); vertical-align: middle; }
+.kwt tr:hover td { background: rgba(79,110,247,.05); }
+.kwt tr.sel td { background: rgba(79,110,247,.1); }
+
+/* Pages list */
+.plist { max-height: 200px; overflow-y: auto; }
+.pi { padding: 8px 0; border-bottom: 1px solid rgba(46,51,80,.4); font-size: 12px; }
+.pi:last-child { border-bottom: none; }
+.pt { font-weight: 600; }
+.pu { color: var(--accent); font-size: 11px; word-break: break-all; }
+.pw { color: var(--yellow); font-size: 11px; margin-top: 1px; }
+
+/* Article */
+.art-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px 36px; font-size: 15px; line-height: 1.78; }
+.art-wrap h1 { font-size: 26px; font-weight: 800; margin-bottom: 16px; line-height: 1.3; }
+.art-wrap h2 { font-size: 19px; font-weight: 700; margin: 28px 0 10px; color: #a5b4fc; }
+.art-wrap h3 { font-size: 15px; font-weight: 700; margin: 16px 0 8px; color: var(--muted); }
+.art-wrap p  { margin-bottom: 14px; }
+.art-wrap ul { margin: 8px 0 14px 20px; }
+.art-wrap li { margin-bottom: 5px; }
+.art-wrap a  { color: var(--accent); text-decoration: none; border-bottom: 1px dashed var(--accent); }
+.art-wrap strong { color: #fff; }
+.kpbox { background: rgba(79,110,247,.09); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 14px 0 20px; }
+.kpbox strong { display: block; margin-bottom: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: var(--accent); }
+pre#rawmd { display: none; background: #0d1117; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.6; color: #cdd9e5; white-space: pre-wrap; word-break: break-word; max-height: 600px; overflow-y: auto; }
+
+/* Meta chips */
+.chips { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0; }
+.chip { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 5px 13px; font-size: 12px; color: var(--muted); }
+.chip strong { color: var(--text); }
+
+/* Tone pills */
+.tones { display: flex; gap: 8px; flex-wrap: wrap; }
+.tones input[type=radio] { display: none; }
+.tones label { padding: 6px 14px; border-radius: 6px; background: var(--surface); border: 1px solid var(--border); cursor: pointer; font-size: 13px; color: var(--muted); transition: all .2s; text-transform: none; letter-spacing: 0; }
+.tones input:checked + label { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* Manual kw section */
+.manual-kw { background: rgba(245,158,11,.06); border: 1px solid rgba(245,158,11,.3); border-radius: 10px; padding: 16px 20px; margin-top: 14px; }
+
+@media(max-width:600px){ .grid2 { grid-template-columns: 1fr; } .art-wrap { padding: 18px; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span style="font-size:24px">✍️</span>
+  <div>
+    <h1>SEO Blog Generator</h1>
+    <p>Ahrefs keyword research → human-quality, SEO-optimized blog articles · April 2026 best practices</p>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- NAV -->
+<div class="steps-nav">
+  <div class="step-pill active" id="n1" onclick="nav(1)"><span class="sn">1</span>Client</div>
+  <div class="step-pill" id="n2" onclick="nav(2)"><span class="sn">2</span>API Keys</div>
+  <div class="step-pill" id="n3" onclick="nav(3)"><span class="sn">3</span>Keywords</div>
+  <div class="step-pill" id="n4" onclick="nav(4)"><span class="sn">4</span>Site</div>
+  <div class="step-pill" id="n5" onclick="nav(5)"><span class="sn">5</span>Generate</div>
+  <div class="step-pill" id="n6" onclick="nav(6)"><span class="sn">6</span>Article</div>
+</div>
+
+<!-- ═══ STEP 1 ═══ -->
+<div id="s1">
+  <div class="card">
+    <div class="card-title">🏢 Client Information</div>
+    <div class="card-desc">This is woven naturally into every article for local SEO authority and brand recognition.</div>
+    <div class="grid2">
+      <div class="fg"><label>Business Name *</label><input id="c-name" placeholder="e.g. Smith & Associates CPA"></div>
+      <div class="fg"><label>Location (City, State) *</label><input id="c-loc" placeholder="e.g. Boston, Massachusetts"></div>
+      <div class="fg"><label>Industry / Primary Service *</label><input id="c-ind" placeholder="e.g. Tax Preparation, Plumbing, Divorce Law"></div>
+      <div class="fg"><label>Website URL *</label><input id="c-url" placeholder="https://smithcpa.com"></div>
+      <div class="fg full"><label>Competitor Domains (comma-separated — never linked to)</label><input id="c-comp" placeholder="turbotax.com, hrblock.com, taxact.com"><span class="hint">External links in articles will never point to these.</span></div>
+      <div class="fg full"><label>Local CTA Template</label><input id="c-cta" placeholder="Looking for tax preparation in Massachusetts? Try {businessName}"><span class="hint">Use {businessName} and {location} as placeholders — woven in organically.</span></div>
+    </div>
+    <div class="actions"><button class="btn btn-p" onclick="step1next()">Continue to API Keys →</button></div>
+  </div>
+</div>
+
+<!-- ═══ STEP 2 ═══ -->
+<div id="s2" class="hidden">
+  <div class="card">
+    <div class="card-title">🔑 API Keys</div>
+    <div class="card-desc">Keys are stored only in this browser tab's memory — never saved to disk or sent anywhere except the official APIs.</div>
+    <div class="grid2">
+      <div class="fg full"><label>Ahrefs API Token *</label><input type="password" id="k-ahrefs" placeholder="Paste your Ahrefs v3 API token"><span class="hint">Ahrefs → Account Settings → API. Requires Standard plan or above.</span></div>
+      <div class="fg full"><label>OpenAI API Key *</label><input type="password" id="k-oai" placeholder="sk-..."><span class="hint">Articles are generated with GPT-4o for maximum human-like quality.</span></div>
+      <div class="fg"><label>Max Keyword Difficulty (KD)</label><input type="number" id="k-kd" value="20" min="1" max="100"><span class="hint">≤20 = easy wins. ≤35 = medium competition.</span></div>
+      <div class="fg"><label>Min Monthly Search Volume</label><input type="number" id="k-vol" value="50" min="1"><span class="hint">Filters out zero-traffic keywords.</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-s" onclick="nav(1)">← Back</button>
+      <button class="btn btn-p" onclick="step2next()">Continue to Keywords →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ STEP 3 ═══ -->
+<div id="s3" class="hidden">
+  <div class="card">
+    <div class="card-title">🔍 Keyword Research</div>
+    <div class="card-desc">Enter a seed topic and pull low-difficulty keywords from Ahrefs. Select one to build your article around.</div>
+    <div class="grid2">
+      <div class="fg"><label>Seed Keyword / Topic *</label><input id="seed" placeholder="e.g. tax preparation, estate planning" onkeydown="if(event.key==='Enter')fetchKw()"></div>
+      <div class="fg"><label>Target Country</label>
+        <select id="kw-country">
+          <option value="us">🇺🇸 United States</option><option value="gb">🇬🇧 United Kingdom</option>
+          <option value="ca">🇨🇦 Canada</option><option value="au">🇦🇺 Australia</option>
+          <option value="in">🇮🇳 India</option><option value="de">🇩🇪 Germany</option><option value="fr">🇫🇷 France</option>
+        </select>
+      </div>
+    </div>
+    <div class="actions al"><button class="btn btn-p" id="fetchBtn" onclick="fetchKw()">🔎 Pull from Ahrefs</button></div>
+    <div id="kw-status" class="hidden" style="margin-top:14px"></div>
+
+    <!-- Manual fallback -->
+    <div class="manual-kw" id="manual-kw" style="display:none">
+      <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--yellow)">⚡ Manual Keyword Entry</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Ahrefs direct calls are blocked by browser CORS policy — this is normal. Enter your target keyword manually, or paste a list below (one per line).</div>
+      <div class="fg"><label>Target keyword(s) — one per line</label><textarea id="manual-kws" rows="4" placeholder="tax preparation for small businesses&#10;best tax accountant massachusetts&#10;small business tax filing tips"></textarea></div>
+      <div style="margin-top:10px"><button class="btn btn-p btn-sm" onclick="loadManualKws()">Use These Keywords →</button></div>
+    </div>
+
+    <div id="kw-table-wrap" class="hidden" style="margin-top:16px">
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px" id="kw-count-label"></div>
+      <div style="overflow-x:auto">
+        <table class="kwt"><thead><tr><th>Keyword</th><th>KD</th><th>Monthly Volume</th><th>CPC</th><th></th></tr></thead>
+        <tbody id="kw-body"></tbody></table>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn btn-s" onclick="nav(2)">← Back</button>
+    <button class="btn btn-p" id="kw-next" onclick="nav(4)" disabled>Analyze Site for This Keyword →</button>
+  </div>
+</div>
+
+<!-- ═══ STEP 4 ═══ -->
+<div id="s4" class="hidden">
+  <div class="card">
+    <div class="card-title">🌐 Site Analysis</div>
+    <div class="card-desc">Checking your website for existing articles (cannibalization) and finding internal pages to link to.</div>
+    <div id="site-status"></div>
+    <div id="site-results" class="hidden">
+      <div id="cannibal-banner"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px">
+        <div><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">📎 Pages for Internal Links</div><div id="int-list" class="plist"></div></div>
+        <div><div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">⚠️ Cannibalization Check</div><div id="can-list" class="plist"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn btn-s" onclick="nav(3)">← Back</button>
+    <button class="btn btn-p" id="site-next" onclick="nav(5)" disabled>Configure & Generate →</button>
+  </div>
+</div>
+
+<!-- ═══ STEP 5 ═══ -->
+<div id="s5" class="hidden">
+  <div class="card">
+    <div class="card-title">⚙️ Article Configuration</div>
+    <div class="card-desc">Review settings then hit generate. GPT-4o will write a ~750-word article tuned to pass AI detection.</div>
+    <div id="gen-summary"></div>
+    <div class="grid2" style="margin-top:20px">
+      <div class="fg full"><label>Additional Instructions (optional)</label>
+        <textarea id="extra-notes" rows="3" placeholder="e.g. Mention we offer free consultations. Focus on homeowners not businesses. Don't mention pricing."></textarea></div>
+      <div class="fg full"><label>Tone</label>
+        <div class="tones">
+          <input type="radio" name="tone" id="t1" value="professional" checked><label for="t1">Professional</label>
+          <input type="radio" name="tone" id="t2" value="conversational"><label for="t2">Conversational</label>
+          <input type="radio" name="tone" id="t3" value="authoritative"><label for="t3">Authoritative</label>
+          <input type="radio" name="tone" id="t4" value="warm"><label for="t4">Warm & Friendly</label>
+        </div>
+      </div>
+    </div>
+    <div class="actions al" style="margin-top:20px">
+      <button class="btn btn-p" id="gen-btn" onclick="generateArticle()">✍️ Generate Article</button>
+    </div>
+    <div id="gen-status" class="hidden" style="margin-top:14px"></div>
+  </div>
+  <div class="actions"><button class="btn btn-s" onclick="nav(4)">← Back</button></div>
+</div>
+
+<!-- ═══ STEP 6 ═══ -->
+<div id="s6" class="hidden">
+  <div class="card" style="padding-bottom:16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div class="card-title" style="margin-bottom:0">📄 Your Article</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-s btn-sm" onclick="toggleRaw()">⇄ Raw Markdown</button>
+        <button class="btn btn-s btn-sm" onclick="copyArt()">📋 Copy</button>
+        <button class="btn btn-g btn-sm" onclick="dlArt()">⬇ Download .md</button>
+        <button class="btn btn-s btn-sm" onclick="nav(3)">🔁 New Article</button>
+      </div>
+    </div>
+  </div>
+  <div id="art-chips" class="chips"></div>
+  <div id="art-rendered" class="art-wrap"></div>
+  <pre id="rawmd"></pre>
+  <div style="text-align:right;margin-top:14px">
+    <button class="btn btn-p" onclick="generateArticle(true)">🔄 Regenerate</button>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+const S = {
+  name:'', loc:'', ind:'', url:'', comp:'', cta:'',
+  ahrefsKey:'', oaiKey:'', kdMax:20, volMin:50, country:'us',
+  kw: null, pages:[], cannibal:[], article:'', done: new Set()
+};
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────────
+function nav(n) {
+  for(let i=1;i<=6;i++){
+    id('s'+i).classList.toggle('hidden', i!==n);
+    const p=id('n'+i);
+    p.classList.remove('active','done');
+    if(i===n) p.classList.add('active');
+    else if(S.done.has(i)) p.classList.add('done');
+  }
+  if(n===4 && S.pages.length===0) startSiteAnalysis();
+  if(n===5) buildGenSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── STEP 1 ─────────────────────────────────────────────────────────────────
+function step1next(){
+  S.name = val('c-name'); S.loc = val('c-loc'); S.ind = val('c-ind');
+  S.url  = val('c-url');  S.comp= val('c-comp'); S.cta = val('c-cta');
+  if(!S.name||!S.ind||!S.url){ alert('Please fill in Business Name, Industry, and Website URL.'); return; }
+  S.done.add(1); nav(2);
+}
+
+// ── STEP 2 ─────────────────────────────────────────────────────────────────
+function step2next(){
+  S.ahrefsKey = val('k-ahrefs'); S.oaiKey = val('k-oai');
+  S.kdMax = parseInt(val('k-kd'))||20; S.volMin = parseInt(val('k-vol'))||50;
+  if(!S.ahrefsKey||!S.oaiKey){ alert('Both API keys are required.'); return; }
+  S.done.add(2); nav(3);
+}
+
+// ── STEP 3: AHREFS KEYWORDS ────────────────────────────────────────────────
+async function fetchKw(){
+  const seed = val('seed');
+  if(!seed){ alert('Enter a seed keyword.'); return; }
+  S.country = val('kw-country');
+
+  const btn = id('fetchBtn');
+  btn.disabled=true; btn.innerHTML='<div class="spin"></div> Fetching…';
+  id('kw-table-wrap').classList.add('hidden');
+  id('manual-kw').style.display='none';
+  status('kw-status','info',`Querying Ahrefs for low-KD keywords around "<strong>${esc(seed)}</strong>"…`,true);
+
+  // Ahrefs v3 API — direct browser call
+  const whereFilter = JSON.stringify({and:[
+    {field:'keyword_difficulty',is:['lte',S.kdMax]},
+    {field:'volume',is:['gte',S.volMin]}
+  ]});
+  const params = new URLSearchParams({
+    country: S.country, keyword: seed, limit: 25,
+    order_by: 'volume:desc', where: whereFilter
+  });
+
+  try {
+    const r = await fetch(`https://api.ahrefs.com/v3/keywords-explorer/matching-terms?${params}`,{
+      headers:{ Authorization:`Bearer ${S.ahrefsKey}`, Accept:'application/json' }
+    });
+
+    if(r.status===401){ status('kw-status','err','❌ Invalid Ahrefs token — check Account → API in Ahrefs.'); showManual(); return; }
+    if(r.status===402){ status('kw-status','err','❌ Your Ahrefs plan doesn\'t include Keywords Explorer API access.'); showManual(); return; }
+    if(!r.ok){ status('kw-status','err',`❌ Ahrefs error ${r.status}. See console for details.`); showManual(); return; }
+
+    const data = await r.json();
+    const kws = (data.keywords||data.data||[]).map(k=>({
+      keyword: k.keyword||'', kd: k.keyword_difficulty||k.difficulty||k.kd||0,
+      volume: k.volume||0, cpc: k.cpc||0
+    }));
+    if(!kws.length){ status('kw-status','warn','⚠️ No keywords found — try a broader seed or raise the KD/Volume limits.'); showManual(); return; }
+    status('kw-status','ok',`✅ Found <strong>${kws.length}</strong> low-difficulty keywords.`);
+    renderKwTable(kws);
+
+  } catch(e) {
+    // CORS or network error — show manual entry
+    status('kw-status','warn','⚠️ Browser CORS policy blocked the Ahrefs call (this is normal). Use manual entry below, or run keywords through Ahrefs and paste them here.');
+    showManual();
+  } finally {
+    btn.disabled=false; btn.innerHTML='🔎 Pull from Ahrefs';
+  }
+}
+
+function showManual(){ id('manual-kw').style.display='block'; }
+
+function loadManualKws(){
+  const lines = val('manual-kws').split('\n').map(l=>l.trim()).filter(Boolean);
+  if(!lines.length){ alert('Enter at least one keyword.'); return; }
+  const kws = lines.map(k=>({keyword:k,kd:null,volume:null,cpc:null}));
+  id('kw-status').classList.remove('hidden');
+  id('kw-status').className='sb ok';
+  id('kw-status').innerHTML=`✅ Loaded <strong>${kws.length}</strong> keyword(s) manually.`;
+  renderKwTable(kws);
+}
+
+function renderKwTable(kws){
+  id('kw-count-label').textContent = `${kws.length} Keyword${kws.length!==1?'s':''} — click a row to select`;
+  const tb = id('kw-body'); tb.innerHTML='';
+  kws.forEach(k=>{
+    const kd=k.kd; const kdBadge = kd===null ? '<span style="color:var(--muted)">—</span>' :
+      `<span class="kdb ${kd<=20?'kd-e':kd<=40?'kd-m':'kd-h'}">${kd}</span>`;
+    const vol = k.volume!==null ? (k.volume||0).toLocaleString() : '—';
+    const cpc = k.cpc ? '$'+Number(k.cpc).toFixed(2) : '—';
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td style="font-weight:600">${esc(k.keyword)}</td><td>${kdBadge}</td><td>${vol}</td>
+      <td style="color:var(--muted)">${cpc}</td>
+      <td><button class="btn btn-s btn-sm" onclick="selectKw('${esc(k.keyword)}',this)">Select</button></td>`;
+    tb.appendChild(tr);
+  });
+  id('kw-table-wrap').classList.remove('hidden');
+}
+
+function selectKw(kw, btn){
+  S.kw=kw; S.pages=[]; S.cannibal=[];
+  document.querySelectorAll('.kwt tr').forEach(r=>r.classList.remove('sel'));
+  btn.closest('tr').classList.add('sel'); btn.textContent='✓ Selected';
+  const nb=id('kw-next'); nb.disabled=false; nb.textContent=`Analyze site for "${kw}" →`;
+}
+
+// ── STEP 4: SITE ANALYSIS ──────────────────────────────────────────────────
+async function startSiteAnalysis(){
+  id('site-results').classList.add('hidden');
+  id('site-next').disabled=true;
+  status('site-status','info',`🌐 Crawling ${S.url} for internal pages…`,true);
+
+  let siteUrl = S.url.trim();
+  if(!siteUrl.match(/^https?:\/\//)) siteUrl='https://'+siteUrl;
+
+  // Use allorigins CORS proxy (only used for reading page titles — no credentials sent)
+  const proxy = 'https://api.allorigins.win/raw?url=';
+  const sitemapUrls=['/sitemap.xml','/sitemap_index.xml','/sitemap-index.xml'];
+  let pages=[], sitemapFound=false;
+
+  for(const path of sitemapUrls){
+    try{
+      const r=await fetch(proxy+encodeURIComponent(siteUrl.replace(/\/$/,'')+path),{signal:AbortSignal.timeout(12000)});
+      const txt=await r.text();
+      if(txt.includes('<urlset')||txt.includes('<sitemapindex')){
+        pages=parseSitemap(txt);
+        if(pages.length){ sitemapFound=true; break; }
+      }
+    }catch{}
+  }
+
+  // Fallback: scrape homepage for links
+  if(!pages.length){
+    try{
+      const r=await fetch(proxy+encodeURIComponent(siteUrl),{signal:AbortSignal.timeout(12000)});
+      const html=await r.text();
+      const doc=new DOMParser().parseFromString(html,'text/html');
+      const seen=new Set();
+      doc.querySelectorAll('a[href]').forEach(a=>{
+        try{
+          const u=new URL(a.href, siteUrl);
+          if(u.hostname===new URL(siteUrl).hostname && !seen.has(u.href)){
+            seen.add(u.href); pages.push({url:u.href,title:a.textContent.trim()||u.href,h1:'',meta:''});
+          }
+        }catch{}
+      });
+    }catch{}
+  }
+
+  // Fetch metadata for each page (limited to 25, via proxy)
+  const pageData=[];
+  for(const p of pages.slice(0,25)){
+    const entry={url:typeof p==='string'?p:p.url, title:typeof p==='object'?p.title:'', h1:'', meta:''};
+    try{
+      const r=await fetch(proxy+encodeURIComponent(entry.url),{signal:AbortSignal.timeout(8000)});
+      const html=await r.text();
+      const doc=new DOMParser().parseFromString(html,'text/html');
+      const t=doc.querySelector('title'); const h=doc.querySelector('h1');
+      const m=doc.querySelector('meta[name="description"]');
+      if(t) entry.title=t.textContent.trim();
+      if(h) entry.h1=h.textContent.trim();
+      if(m) entry.meta=m.getAttribute('content')||'';
+    }catch{}
+    pageData.push(entry);
+  }
+
+  S.pages=pageData;
+
+  // Cannibalization: check titles/h1s against target keyword
+  const kwWords=(S.kw||'').toLowerCase().split(/\s+/).filter(w=>w.length>3);
+  S.cannibal=pageData.filter(p=>{
+    const txt=((p.title||'')+(p.h1||'')+(p.meta||'')).toLowerCase();
+    return kwWords.some(w=>txt.includes(w));
+  });
+
+  // Render internal list
+  const intList=id('int-list'); intList.innerHTML='';
+  (pageData.length?pageData:pages).slice(0,20).forEach(p=>{
+    const u=p.url||p; const t=p.title||u;
+    intList.innerHTML+=`<div class="pi"><div class="pt">${esc(t.substring(0,60))}</div><div class="pu">${esc(u)}</div></div>`;
+  });
+  if(!intList.children.length) intList.innerHTML='<div style="color:var(--muted);font-size:12px;padding:8px 0">No pages found — site may block crawlers.</div>';
+
+  // Render cannibalization
+  const canList=id('can-list'); canList.innerHTML='';
+  const banner=id('cannibal-banner');
+  if(!S.cannibal.length){
+    banner.innerHTML=`<div class="sb ok">✅ No cannibalization risk found for "<strong>${esc(S.kw)}</strong>"</div>`;
+    canList.innerHTML='<div style="color:var(--muted);font-size:12px;padding:8px 0">No similar articles detected.</div>';
+  } else {
+    banner.innerHTML=`<div class="sb warn">⚠️ ${S.cannibal.length} existing page(s) may overlap — review before publishing.</div>`;
+    S.cannibal.forEach(p=>{
+      canList.innerHTML+=`<div class="pi"><div class="pt">${esc((p.title||p.url).substring(0,55))}</div><div class="pu">${esc(p.url)}</div><div class="pw">May compete with your keyword</div></div>`;
+    });
+  }
+
+  status('site-status', sitemapFound?'ok':'info',
+    sitemapFound ? `✅ Sitemap found — analyzed ${pageData.length} pages` :
+    `ℹ️ No sitemap found — scraped ${pageData.length} pages from homepage links`);
+  id('site-results').classList.remove('hidden');
+  id('site-next').disabled=false;
+}
+
+function parseSitemap(xml){
+  try{
+    const doc=new DOMParser().parseFromString(xml,'application/xml');
+    return [...doc.querySelectorAll('loc')].map(l=>l.textContent.trim());
+  }catch{ return []; }
+}
+
+// ── STEP 5: GENERATE ──────────────────────────────────────────────────────
+function buildGenSummary(){
+  id('gen-summary').innerHTML=`<div class="chips">
+    ${chip('🎯 Keyword',S.kw)} ${chip('🏢 Client',S.name)} ${chip('📍 Location',S.loc||'Not set')}
+    ${chip('🔧 Industry',S.ind)} ${chip('📄 Pages found',S.pages.length)} ${chip('⚠️ Cannibal risk',S.cannibal.length+' pages')}
+  </div>`;
+}
+function chip(l,v){ return `<div class="chip">${l}: <strong>${esc(String(v||''))}</strong></div>`; }
+
+async function generateArticle(isRegen=false){
+  const btn=id('gen-btn'); btn.disabled=true; btn.innerHTML='<div class="spin"></div> Writing…';
+  id('gen-status').classList.remove('hidden');
+  status('gen-status','info','✍️ GPT-4o is crafting your article — typically 30–60 seconds…',true);
+
+  const tone=document.querySelector('input[name="tone"]:checked')?.value||'professional';
+  const notes=val('extra-notes');
+  const ctaLine=(S.cta||`Looking for ${S.ind} in ${S.loc}? ${S.name} is here to help.`)
+    .replace('{businessName}',S.name).replace('{location}',S.loc);
+
+  const toneGuide={
+    professional:'Expert, direct, authoritative — like a trusted consultant',
+    conversational:'Friendly, casual — like texting a knowledgeable friend',
+    authoritative:'Confident, data-driven, thought-leadership style',
+    warm:'Empathetic, encouraging, community-focused'
+  }[tone]||'Expert, direct, authoritative';
+
+  const internalCtx = S.pages.filter(p=>p.title||p.h1).slice(0,8).map(p=>`  • ${p.title||p.h1} → ${p.url}`).join('\n');
+  const cannibalCtx = S.cannibal.slice(0,4).map(p=>`  • ${p.title}: ${p.url}`).join('\n');
+
+  const systemPrompt=`You are a senior SEO copywriter who has been writing web content since 2008. Your articles consistently rank on page 1 and pass every AI-detection tool including GPTZero, Winston AI, Copyleaks, and Originality.ai.
+
+Your authentic writing fingerprints:
+• Vary sentence length dramatically — some 5 words, some 25. This is the #1 human signal.
+• Use contractions constantly: don't, won't, you'll, it's, they're, we've, can't.
+• Occasionally begin sentences with And, But, or So.
+• Include one rhetorical question per section to hold attention.
+• One specific, concrete detail or number per main section.
+• Vary paragraph length: sometimes 1 sentence, sometimes 3-4.
+• Have a slight opinion — not neutral robot copy.
+• Use second-person ("you", "your") throughout.
+• NEVER USE: "In conclusion", "In today's world", "It's worth noting", "Furthermore", "Moreover", "In the digital age", "Navigating", "Leverage" (verb), "Delve", "Comprehensive", "Invaluable", "Paramount", "Unlock".
+• Tone: ${toneGuide}
+
+The output MUST read like a real expert helping someone, not a content farm template.`;
+
+  const userPrompt=`Write a ~750-word SEO blog article for:
+
+TARGET KEYWORD: "${S.kw}"
+
+BUSINESS DETAILS:
+  Name: ${S.name}
+  Location: ${S.loc}
+  Industry: ${S.ind}
+  Website: ${S.url}
+  Competitors (never link to): ${S.comp||'none'}
+${internalCtx ? '\nINTERNAL PAGES FOR LINKING:\n'+internalCtx : ''}
+${cannibalCtx ? '\nEXISTING PAGES (don\'t duplicate their angle):\n'+cannibalCtx : ''}
+${notes ? '\nWRITER NOTES: '+notes : ''}
+
+━━━ REQUIRED STRUCTURE ━━━
+
+1. # H1 Title — compelling, keyword-smart (not keyword-stuffed verbatim)
+
+2. Opening paragraph (2–3 sentences)
+   Lead with the reader's pain point or a surprising fact. Include the target keyword naturally.
+
+3. **Key Points** block (MANDATORY — right after intro):
+   **Key Points**
+   • [Concrete takeaway 1]
+   • [Concrete takeaway 2]
+   • [Concrete takeaway 3]
+
+4. ## H2: [First Question?]  ← phrased as a question
+   ### H3: [Specific sub-angle]
+   90–130 words. Include ONE internal link: [anchor text](url)
+
+5. ## H2: [Second Question?]  ← phrased as a question
+   ### H3: [Specific sub-angle]
+   90–130 words. Include ONE external link to an authoritative non-competitor source.
+   Never link to: ${S.comp||'competitor domains'}
+
+6. ## H2: [Third Question?]  ← phrased as a question
+   ### H3: [Specific sub-angle]
+   90–130 words. Weave in this CTA naturally as advice (NOT as an ad):
+   "${ctaLine}"
+
+7. Closing paragraph (2–3 sentences) — reinforce main insight, mention ${S.name} by name, gentle CTA.
+
+━━━ SEO RULES ━━━
+• Target keyword in: H1, first 100 words, ≥1 H2 naturally, closing paragraph
+• 4–6 LSI / semantic keywords throughout
+• "${S.name}" mentioned naturally 2–3 times
+• Reading level: 7th–8th grade
+• All links: [anchor text](url)
+
+Return ONLY clean markdown. Start immediately with the # H1.`;
+
+  try{
+    const r=await fetch('https://api.openai.com/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${S.oaiKey}`},
+      body:JSON.stringify({
+        model:'gpt-4o',
+        messages:[{role:'system',content:systemPrompt},{role:'user',content:userPrompt}],
+        temperature:0.82, max_tokens:2200, frequency_penalty:0.35, presence_penalty:0.25
+      })
+    });
+    if(r.status===401){ status('gen-status','err','❌ Invalid OpenAI API key.'); return; }
+    if(r.status===429){ status('gen-status','err','❌ OpenAI rate limit or quota exceeded. Check your billing at platform.openai.com'); return; }
+    if(!r.ok){ const e=await r.json(); status('gen-status','err','❌ OpenAI error: '+(e.error?.message||r.status)); return; }
+    const d=await r.json();
+    const article=d.choices?.[0]?.message?.content?.trim()||'';
+    if(!article){ status('gen-status','err','❌ Empty response from OpenAI. Try again.'); return; }
+    S.article=article;
+    S.done.add(5);
+    nav(6);
+    renderArticle(article);
+  }catch(e){
+    status('gen-status','err','❌ Network error: '+e.message);
+  }finally{
+    btn.disabled=false; btn.innerHTML='✍️ Generate Article';
+  }
+}
+
+// ── STEP 6: RENDER ────────────────────────────────────────────────────────
+function renderArticle(md){
+  const wc=(md.match(/\b\w+\b/g)||[]).length;
+  id('art-chips').innerHTML=`${chip('📝 Words',wc)} ${chip('🎯 Keyword',S.kw)} ${chip('🏢 Client',S.name)} ${chip('🤖 Model','gpt-4o')}`;
+  id('art-rendered').innerHTML=md2html(md);
+  id('rawmd').textContent=md;
+  id('art-rendered').style.display='block';
+  id('rawmd').style.display='none';
+}
+
+function md2html(md){
+  // Key Points box
+  md=md.replace(/\*\*Key Points\*\*\n((?:[•\-\*].+\n?)+)/gi,(_,b)=>{
+    const items=b.trim().split('\n').map(x=>x.replace(/^[•\-\*]\s*/,'').trim());
+    return `<div class="kpbox"><strong>Key Points</strong><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
+  });
+  md=md.replace(/^### (.+)$/gm,'<h3>$1</h3>');
+  md=md.replace(/^## (.+)$/gm,'<h2>$1</h2>');
+  md=md.replace(/^# (.+)$/gm,'<h1>$1</h1>');
+  md=md.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  md=md.replace(/\[([^\]]+)\]\(([^)]+)\)/g,(_,t,u)=>{
+    const ext=u.startsWith('http')&&!u.includes(S.url.replace(/https?:\/\//,''));
+    return `<a href="${u}"${ext?' target="_blank" rel="noopener"':''}>${t}</a>`;
+  });
+  md=md.replace(/((?:^[•\-\*] .+\n?)+)/gm,m=>{
+    const items=m.trim().split('\n').map(l=>`<li>${l.replace(/^[•\-\*]\s*/,'')}</li>`);
+    return '<ul>'+items.join('')+'</ul>';
+  });
+  return md.split(/\n{2,}/).map(b=>{
+    b=b.trim(); if(!b)return '';
+    if(/^<[hHuU]/.test(b))return b;
+    return '<p>'+b.replace(/\n/g,'<br>')+'</p>';
+  }).join('\n');
+}
+
+function toggleRaw(){
+  const r=id('rawmd'),a=id('art-rendered');
+  if(r.style.display==='none'){ r.style.display='block'; a.style.display='none'; }
+  else { r.style.display='none'; a.style.display='block'; }
+}
+function copyArt(){
+  navigator.clipboard.writeText(S.article).then(()=>alert('Copied!')).catch(()=>{
+    const t=document.createElement('textarea');t.value=S.article;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);alert('Copied!');
+  });
+}
+function dlArt(){
+  const slug=(S.kw||'article').replace(/\s+/g,'-').toLowerCase().replace(/[^a-z0-9-]/g,'');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([S.article],{type:'text/markdown'}));
+  a.download=slug+'-article.md'; a.click();
+}
+
+// ── STATUS HELPER ─────────────────────────────────────────────────────────
+function status(elId,type,msg,spin=false){
+  const el=id(elId);
+  el.className='sb '+type;
+  el.classList.remove('hidden');
+  el.innerHTML=(spin?'<div class="spin"></div>':'')+`<span>${msg}</span>`;
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────
+const id=x=>document.getElementById(x);
+const val=x=>id(x).value.trim();
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+</script>
+</body>
+</html>
